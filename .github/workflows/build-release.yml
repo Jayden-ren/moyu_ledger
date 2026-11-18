@@ -75,7 +75,7 @@ jobs:
         shell: pwsh
         run: |
           $env:PATH = "C:\Qt\6.11.1\mingw_64\bin;C:\Qt\Tools\mingw1310_64\bin;" + $env:PATH
-          .\packaging\build-single-exe.ps1 -Version "${{ inputs.version }}"
+          .\packaging\build-single-exe.ps1 -Version "${{ inputs.version }}" -SkipInstaller
           if ($LASTEXITCODE -ne 0) { throw "打包失败" }
           Get-ChildItem dist | Select-Object Name, Length
 

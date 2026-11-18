@@ -23,6 +23,9 @@
 #>
 param(
     [switch]$Slim,
+
+    # 跳过 Inno Setup 安装包（CI 或没装中文语言包时用）
+    [switch]$NoInstaller,
     [string]$QtPath = "C:\Qt\6.11.1\mingw_64",
     [string]$Version = "1.0.0",
 
@@ -132,7 +135,7 @@ if (-not $iscc) {
     if ($cmd) { $iscc = $cmd.Source }
 }
 
-if ($iscc) {
+if ($iscc -and -not $NoInstaller) {
     Write-Host "==> 生成安装包（Inno Setup）" -ForegroundColor Cyan
     $isccArgs = @("/DMyVersion=$Version")
     if ($signTool) {
@@ -146,6 +149,7 @@ if ($iscc) {
         Write-Host ("    安装包：{0}（{1} MB）" -f $_.FullName, [math]::Round($_.Length / 1MB, 1)) -ForegroundColor Green
     }
 } else {
-    Write-Host "    未找到 Inno Setup（ISCC.exe），跳过安装包；便携包已生成。" -ForegroundColor Yellow
+    if ($NoInstaller) { Write-Host "    已跳过安装包（-NoInstaller）" -ForegroundColor Yellow }
+    else { Write-Host "    未找到 Inno Setup（ISCC.exe），跳过安装包；便携包已生成。" -ForegroundColor Yellow }
     Write-Host "    安装 Inno Setup 6 后重跑本脚本即可自动产出 *-setup.exe。" -ForegroundColor Yellow
 }

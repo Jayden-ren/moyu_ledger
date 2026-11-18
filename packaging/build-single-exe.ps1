@@ -20,7 +20,8 @@
 #>
 param(
     [string]$Version = "1.0.0",
-    [switch]$SkipPackage
+    [switch]$SkipPackage,
+    [switch]$SkipInstaller
 )
 
 $ErrorActionPreference = "Stop"
@@ -31,7 +32,9 @@ $gxx = Join-Path $mingwBin "g++.exe"
 
 if (-not $SkipPackage) {
     Write-Host "==> [1/4] 生成便携包" -ForegroundColor Cyan
-    & powershell -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot "build-package.ps1") -Version $Version
+    $packageArgs = @("-ExecutionPolicy","Bypass","-File", (Join-Path $PSScriptRoot "build-package.ps1"), "-Version", $Version)
+    if ($SkipInstaller) { $packageArgs += "-NoInstaller" }
+    & powershell @packageArgs
     if ($LASTEXITCODE -ne 0) { throw "便携包构建失败" }
 } else {
     Write-Host "==> [1/4] 跳过便携包构建" -ForegroundColor Yellow
