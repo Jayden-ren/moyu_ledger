@@ -67,11 +67,18 @@ if ($LASTEXITCODE -ne 0) { throw "windres 编译资源失败" }
 
 Write-Host "==> [3/4] 编译启动器" -ForegroundColor Cyan
 $outExe = Join-Path $root "dist\摸鱼记账-$Version-单文件.exe"
+# 先编译成 ASCII 文件名：部分环境的 ld 无法写中文路径，最后再用 PowerShell 复制成中文产物名
+$asciiExe = Join-Path $workDir "launcher_out.exe"
+Remove-Item $asciiExe -Force -ErrorAction SilentlyContinue
 & $gxx -O2 -s -mwindows -municode -DUNICODE -D_UNICODE -DKEEP_VERSION_HEADER `
     "-I$workDir" `
     (Join-Path $PSScriptRoot "launcher\main.cpp") $resPath `
-    -o $outExe -lshell32
+    -o $asciiExe -lshell32
 if ($LASTEXITCODE -ne 0) { throw "启动器编译失败" }
+if (-not (Test-Path $asciiExe)) { throw "启动器产物缺失：$asciiExe" }
+Copy-Item $asciiExe $outExe -Force
+Remove-Item $asciiExe -Force -ErrorAction SilentlyContinue
+if (-not (Test-Path $outExe)) { throw "单文件产物复制失败：$outExe" }
 
 Write-Host "==> [4/4] 完成" -ForegroundColor Cyan
 $exeMb = [math]::Round((Get-Item $outExe).Length / 1MB, 1)
