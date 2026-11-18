@@ -1,0 +1,78 @@
+﻿name: build-release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "版本号（用于产物命名）"
+        required: false
+        default: "1.0.0"
+      tag:
+        description: "要上传到的 release tag"
+        required: false
+        default: "v1.0.0"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 安装 Qt 6.11.1 + MinGW 13.1
+        shell: pwsh
+        run: |
+          python -m pip install --quiet aqtinstall
+          python -m aqt install-qt windows desktop 6.11.1 win64_mingw -O C:\Qt
+          python -m aqt install-tool windows desktop tools_mingw1310 -O C:\Qt
+          Get-ChildItem C:\Qt | Select-Object Name
+          if (-not (Test-Path "C:\Qt\6.11.1\mingw_64\bin\qmake.exe")) { throw "Qt 安装路径不符合预期" }
+
+      - name: 配置与编译（Release）
+        shell: pwsh
+        run: |
+          $env:PATH = "C:\Qt\6.11.1\mingw_64\bin;C:\Qt\Tools\mingw1310_64\bin;" + $env:PATH
+          cmake -S . -B build\release -G Ninja -DCMAKE_BUILD_TYPE=Release "-DCMAKE_PREFIX_PATH=C:\Qt\6.11.1\mingw_64"
+          if ($LASTEXITCODE -ne 0) { throw "CMake 配置失败" }
+          cmake --build build\release
+          if ($LASTEXITCODE -ne 0) { throw "编译失败" }
+
+      - name: 自检
+        shell: pwsh
+        run: |
+          $env:PATH = "C:\Qt\6.11.1\mingw_64\bin;C:\Qt\Tools\mingw1310_64\bin;" + $env:PATH
+          .\build\release\MoyuLedger.exe --self-test
+          if ($LASTEXITCODE -ne 0) { throw "自检失败" }
+
+      - name: 打包单文件 exe
+        shell: pwsh
+        run: |
+          $env:PATH = "C:\Qt\6.11.1\mingw_64\bin;C:\Qt\Tools\mingw1310_64\bin;" + $env:PATH
+          .\packaging\build-single-exe.ps1 -Version "${{ inputs.version }}"
+          if ($LASTEXITCODE -ne 0) { throw "打包失败" }
+          Get-ChildItem dist | Select-Object Name, Length
+
+      - name: 上传到 Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $ver = "${{ inputs.version }}"
+          $tag = "${{ inputs.tag }}"
+          $src = "dist\摸鱼记账-$ver-单文件.exe"
+          if (-not (Test-Path $src)) { throw "找不到单文件产物：$src" }
+          $dst = "dist\moyu_ledger_windows_x64_$ver.exe"
+          Copy-Item $src $dst -Force
+          Get-FileHash $dst -Algorithm SHA256 | Format-List
+          gh release view $tag --repo $env:GITHUB_REPOSITORY | Out-Null
+          gh release upload $tag $dst --repo $env:GITHUB_REPOSITORY --clobber
+          # 清理之前残留的分片资产
+          gh release view $tag --repo $env:GITHUB_REPOSITORY --json assets --jq '.assets[].name' | Where-Object { $_ -like "moyu_part_*" } | ForEach-Object {
+            gh release delete-asset $tag $_ --repo $env:GITHUB_REPOSITORY -y
+          }
+          gh release view $tag --repo $env:GITHUB_REPOSITORY --json assets
