@@ -61,12 +61,16 @@ jobs:
           QT_QPA_PLATFORM: offscreen
         run: |
           $env:PATH = "C:\Qt\6.11.1\mingw_64\bin;C:\Qt\Tools\mingw1310_64\bin;" + $env:PATH
-          .\build\release\MoyuLedger.exe --self-test 2>&1 | Tee-Object -FilePath selftest.log
-          if ($LASTEXITCODE -ne 0) {
-            Get-Content selftest.log
-            throw "自检失败"
-          }
-
+          Write-Host "== Qt 版本 =="
+          & "C:\Qt\6.11.1\mingw_64\bin\qmake.exe" -query QT_VERSION
+          Get-ChildItem "C:\Qt\6.11.1\mingw_64\plugins\platforms" | Select-Object -ExpandProperty Name
+          Write-Host "== 运行自检 =="
+          $lines = @()
+          $output = & ".\build\release\MoyuLedger.exe" --self-test 2>&1
+          $code = $LASTEXITCODE
+          $output | ForEach-Object { $lines += "$_"; Write-Host $_ }
+          Write-Host "== exit code = $code =="
+          if ($code -ne 0) { throw "自检失败（exit=$code）" }
       - name: 打包单文件 exe
         shell: pwsh
         run: |
