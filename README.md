@@ -1,4 +1,4 @@
-# 摸鱼记账（moyu_ledger）
+﻿# 摸鱼记账（moyu_ledger）
 
 > 上班顺手记一笔的本地记账软件。Qt 6 + C++20 + QML，数据只存本地，不联网、不注册、不打扰。
 
@@ -9,6 +9,16 @@
 - **技术栈**：Qt 6.11.1（QML）、C++20、SQLite（WAL）
 
 ---
+
+## 下载
+
+- **GitHub Releases**：<https://github.com/Jayden-ren/moyu_ledger/releases/tag/v1.0.0>
+- 下载文件：`moyu_ledger_windows_x64_1.0.0.exe`（约 39 MB，单文件、免安装）
+- SHA256：`95F35A11B60D0AD9C04B3B4D628242D9034340A88E04CC236446F15B968AE87A`
+
+> Release 里的产物由 GitHub Actions（`.github/workflows/build-release.yml`）自动构建：
+> Qt 6.10.2 + MinGW 13.1 → Release 编译 → `--self-test` 自检 → 打单文件 exe → 上传 Release。
+> 本地构建使用 Qt 6.11.1，两者功能一致（CMake 要求 Qt ≥ 6.5）。
 
 ## 功能
 
