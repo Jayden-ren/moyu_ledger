@@ -227,6 +227,6 @@ packaging/
 
 dist/
 ├── MoyuLedger-1.0.0-portable.zip    # 便携包
-├── KeepAccount/                      # 已部署的便携目录（可直接运行 MoyuLedger.exe）
+├── MoyuLedger/                      # 已部署的便携目录（可直接运行 MoyuLedger.exe）
 └── 摸鱼记账-1.0.0-单文件.exe            # ★ 单文件产物
 ```
