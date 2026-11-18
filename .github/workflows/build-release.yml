@@ -24,14 +24,27 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: 安装 Qt 6.11.1 + MinGW 13.1
+      - name: 安装 Qt（自动挑选可用版本）+ MinGW 13.1
         shell: pwsh
         run: |
-          python -m pip install --quiet aqtinstall
-          python -m aqt install-qt windows desktop 6.11.1 win64_mingw -O C:\Qt
+          python -m pip install --quiet --upgrade aqtinstall
+          Write-Host "== 可用版本 =="
+          python -m aqt list-qt windows desktop
+          $candidates = @("6.11.1", "6.11.0", "6.10.2", "6.10.1", "6.9.3", "6.9.2", "6.8.3")
+          $installed = $null
+          foreach ($v in $candidates) {
+            Write-Host "== 尝试安装 Qt $v =="
+            python -m aqt install-qt windows desktop $v win64_mingw -O C:\Qt
+            if (Test-Path "C:\Qt\$v\mingw_64\bin\qmake.exe") { $installed = $v; break }
+          }
+          if (-not $installed) { throw "Qt 安装失败：没有可用版本" }
+          Write-Host "== 已安装 Qt $installed =="
+          if ($installed -ne "6.11.1") {
+            New-Item -ItemType Directory -Force -Path "C:\Qt\6.11.1" | Out-Null
+            cmd /c mklink /J "C:\Qt\6.11.1\mingw_64" "C:\Qt\$installed\mingw_64"
+          }
           python -m aqt install-tool windows desktop tools_mingw1310 -O C:\Qt
-          Get-ChildItem C:\Qt | Select-Object Name
-          if (-not (Test-Path "C:\Qt\6.11.1\mingw_64\bin\qmake.exe")) { throw "Qt 安装路径不符合预期" }
+          & "C:\Qt\6.11.1\mingw_64\bin\qmake.exe" -query QT_VERSION
 
       - name: 配置与编译（Release）
         shell: pwsh
