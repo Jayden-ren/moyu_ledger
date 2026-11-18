@@ -57,10 +57,15 @@ jobs:
 
       - name: 自检
         shell: pwsh
+        env:
+          QT_QPA_PLATFORM: offscreen
         run: |
           $env:PATH = "C:\Qt\6.11.1\mingw_64\bin;C:\Qt\Tools\mingw1310_64\bin;" + $env:PATH
-          .\build\release\MoyuLedger.exe --self-test
-          if ($LASTEXITCODE -ne 0) { throw "自检失败" }
+          .\build\release\MoyuLedger.exe --self-test 2>&1 | Tee-Object -FilePath selftest.log
+          if ($LASTEXITCODE -ne 0) {
+            Get-Content selftest.log
+            throw "自检失败"
+          }
 
       - name: 打包单文件 exe
         shell: pwsh

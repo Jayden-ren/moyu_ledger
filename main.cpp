@@ -4,6 +4,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QFile>
+#include <memory>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
