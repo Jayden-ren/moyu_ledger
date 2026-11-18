@@ -1,0 +1,238 @@
+{
+  "$meta": {
+    "name": "KeepAccount / 定稿主题 token",
+    "recipe": "A 骨架 + C 图表 + D 键盘流 + B 柔和配额（见 06-方案对比与推荐.md 第 6 节）",
+    "canvas": "1440x900 @1x",
+    "version": "1.0.0",
+    "sourceOfTruth": "方案设计/_shared/设计基准.md 第 2/3/4 节",
+    "note": "值全部取自 08 目录四张定稿截图；QML 侧建议生成为 Theme.qml 单例（pragma Singleton），禁止组件内硬编码色值。"
+  },
+  "colors": {
+    "light": {
+      "bg": {
+        "canvas": "#F5F6F8",
+        "surface": "#FFFFFF",
+        "nav": "#FBFCFD",
+        "subtle": "#FAFBFC",
+        "tint": "#F2F5FA",
+        "hover": "#F4F6F9",
+        "selection": "#F1F6FF"
+      },
+      "border": {
+        "base": "#E3E6EB",
+        "hairline": "#F4F5F8",
+        "strong": "#DDE1E7",
+        "divider": "#EDEFF3"
+      },
+      "text": {
+        "primary": "#1F2430",
+        "secondary": "#7A8290",
+        "tertiary": "#9AA1AC",
+        "disabled": "#B4BAC4",
+        "inverse": "#FFFFFF"
+      },
+      "accent": {
+        "500": "#2563EB",
+        "600": "#1D4ED8",
+        "soft": "#EAF1FF",
+        "softStrong": "#DBE7FF",
+        "focusRing": "rgba(37,99,235,0.13)"
+      },
+      "semantic": {
+        "income": "#15803D",
+        "expense": "#24292F",
+        "negative": "#DC2626",
+        "warnBg": "#FFFBEB",
+        "warnBorder": "#FBE5B4",
+        "warnFg": "#B45309",
+        "warnSolid": "#F59E0B",
+        "dangerBg": "#FFEDE8",
+        "dangerFg": "#DC2626",
+        "ok": "#15803D",
+        "chartLine": "#2563EB",
+        "chartFillTop": "rgba(37,99,235,0.22)",
+        "chartFillBottom": "rgba(37,99,235,0.00)",
+        "chartBudgetLine": "#F59E0B",
+        "chartGrid": "#F1F3F6",
+        "chartTrack": "#EEF0F4"
+      }
+    },
+    "dark": {
+      "bg": {
+        "canvas": "#0E1116",
+        "surface": "#161A20",
+        "nav": "#12161C",
+        "subtle": "#1A1F27",
+        "tint": "#1F2530",
+        "hover": "#1C222B",
+        "selection": "#232A36"
+      },
+      "border": {
+        "base": "#262C36",
+        "hairline": "#1E242C",
+        "strong": "#2E3542",
+        "divider": "#232933"
+      },
+      "text": {
+        "primary": "#E7EAF0",
+        "secondary": "#9AA4B2",
+        "tertiary": "#6F7987",
+        "disabled": "#545D6A",
+        "inverse": "#0E1116"
+      },
+      "accent": {
+        "500": "#E4B363",
+        "600": "#D19C43",
+        "soft": "#E4B36324",
+        "softStrong": "#E4B36338",
+        "focusRing": "rgba(228,179,99,0.22)"
+      },
+      "semantic": {
+        "income": "#4ADE80",
+        "expense": "#E7EAF0",
+        "negative": "#F87171",
+        "warnBg": "#2A2116",
+        "warnBorder": "#3D3020",
+        "warnFg": "#E4B363",
+        "warnSolid": "#E4B363",
+        "dangerBg": "#2A1818",
+        "dangerFg": "#F87171",
+        "ok": "#4ADE80",
+        "chartLine": "#E4B363",
+        "chartFillTop": "rgba(228,179,99,0.22)",
+        "chartFillBottom": "rgba(228,179,99,0.00)",
+        "chartBudgetLine": "#E4B363",
+        "chartGrid": "#262C36",
+        "chartTrack": "#262C36"
+      }
+    },
+    "category": {
+      "housing": "#6366F1",
+      "shopping": "#F59E0B",
+      "food": "#EF4444",
+      "gift": "#EC4899",
+      "education": "#8B5CF6",
+      "entertainment": "#06B6D4",
+      "telecom": "#64748B",
+      "daily": "#22C55E",
+      "medical": "#14B8A6",
+      "transport": "#3B82F6",
+      "income": "#16A34A"
+    }
+  },  "typography": {
+    "fontFamily": "\"Segoe UI Variable Text\", \"Segoe UI\", \"Microsoft YaHei UI\", \"Microsoft YaHei\", sans-serif",
+    "fontFamilyLatin": "\"Segoe UI Variable Text\", \"Segoe UI\", sans-serif",
+    "fontFamilyMono": "\"Segoe UI\", \"Microsoft YaHei UI\", monospace",
+    "tabularNums": true,
+    "sizes": {
+      "micro": 10,
+      "micro2": 10.5,
+      "micro3": 11,
+      "small": 12,
+      "small2": 12.5,
+      "body": 13,
+      "body2": 14,
+      "title": 16,
+      "h1": 17,
+      "h2": 20,
+      "kpi": 21,
+      "amount": 28,
+      "amountLg": 44,
+      "hero": 42
+    },
+    "weights": { "regular": 400, "medium": 500, "semibold": 600, "bold": 700 },
+    "lineHeight": { "body": 1.5, "title": 1.25, "compact": 1.2 },
+    "letterSpacing": { "tight": -0.4, "normal": 0, "wide": 0.4, "wider": 0.6 }
+  },
+  "radius": {
+    "chip": 4,
+    "tag": 5,
+    "btn": 6,
+    "card": 8,
+    "panel": 12,
+    "palette": 16,
+    "circle": 999
+  },
+  "spacing": {
+    "xs": 4,
+    "s": 6,
+    "sm": 8,
+    "md": 10,
+    "lg": 12,
+    "xl": 14,
+    "xxl": 16,
+    "xxxl": 24,
+    "pagePadding": 16,
+    "cardPadding": 14,
+    "cardGap": 14,
+    "sectionGap": 20
+  },
+  "shadow": {
+    "card": "0 1px 2px rgba(16,24,40,0.04)",
+    "raised": "0 2px 6px rgba(16,24,40,0.08)",
+    "btn": "0 1px 2px rgba(37,99,235,0.30)",
+    "panel": "0 28px 72px rgba(9,14,25,0.45), 0 3px 8px rgba(9,14,25,0.18)",
+    "palette": "0 28px 72px rgba(9,14,25,0.42), 0 3px 8px rgba(9,14,25,0.18)",
+    "scrim": "rgba(15,18,24,0.55)",
+    "scrimSoft": "rgba(15,18,24,0.42)"
+  },
+  "sizes": {
+    "window": { "width": 1440, "height": 900, "minWidth": 1280, "minHeight": 800 },
+    "titleBar": { "height": 40, "buttonWidth": 46, "buttonHeight": 40, "iconBox": 18 },
+    "toolBar": { "height": 56, "controlHeight": 32, "primaryHeight": 34, "searchWidth": 250, "monthSwitchWidth": 168 },
+    "nav": { "width": 248, "itemHeight": 36, "accountRowHeight": 38, "categoryRowHeight": 32, "nodePadding": 8 },
+    "content": { "paddingX": 16, "paddingY": 12 },
+    "kpiStrip": { "height": 68, "cellMinWidth": 150 },
+    "table": {
+      "colHeaderHeight": 33,
+      "groupHeaderHeight": 28,
+      "rowHeight": 45,
+      "statusBarHeight": 34,
+      "colCategory": 66,
+      "colTime": 44,
+      "colAccount": 118,
+      "colAmount": 108,
+      "selectedBarWidth": 2
+    },
+    "detail": { "width": 352, "amountFontSize": 28, "kvRowHeight": 29 },
+    "panel": { "width": 860, "height": 620, "headerHeight": 60, "footerHeight": 64, "categoryStripHeight": 92 },
+    "palette": { "width": 640, "top": 110, "inputHeight": 56, "rowHeight": 42, "groupLabelHeight": 26, "footerHeight": 36 },
+    "charts": {
+      "ringDiameter": 150,
+      "ringStroke": 13,
+      "stackedBarHeight": 20,
+      "areaChartHeight": 266,
+      "miniBarHeight": 108,
+      "insightRowHeight": 52
+    },
+    "targets": { "minClickSize": 28, "circleButton": 44, "keypadKey": 46, "badge": 24, "badgeLg": 32, "iconSize": 24, "iconStroke": 1.6 }
+  },
+  "motion": {
+    "fast": 120,
+    "base": 180,
+    "slow": 240,
+    "easing": "OutQuad",
+    "listScrollDuration": 140
+  },
+  "keymap": {
+    "newTransaction": "Ctrl+N",
+    "commandPalette": "Ctrl+K",
+    "search": "Ctrl+F",
+    "nextField": "Tab",
+    "moveSelection": "Up/Down",
+    "openDetail": "Enter",
+    "saveTransaction": "Ctrl+Enter",
+    "duplicateTransaction": "Ctrl+D",
+    "deleteTransaction": "Delete",
+    "prevNextMonth": "Ctrl+Left / Ctrl+Right",
+    "currentMonth": "Ctrl+T",
+    "exportCsv": "Ctrl+E",
+    "filter": "F",
+    "closeOrBack": "Esc",
+    "gotoOverview": "Ctrl+1",
+    "gotoWorkbench": "Ctrl+2",
+    "gotoReport": "Ctrl+3",
+    "gotoBudget": "Ctrl+4",
+    "toggleDark": "Ctrl+Shift+L"
+  }
+}

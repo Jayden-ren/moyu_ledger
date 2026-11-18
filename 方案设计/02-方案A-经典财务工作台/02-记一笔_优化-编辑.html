@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>方案A · 记一笔（优化）· 编辑态</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{font-family:"Segoe UI Variable Text","Segoe UI","Microsoft YaHei UI","Microsoft YaHei",sans-serif;font-size:13px;line-height:1.5;color:#1F2430;background:#F5F6F8;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+.ic{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.app{width:1440px;height:900px;display:flex;flex-direction:column;border:1px solid #D3D8DF;overflow:hidden;background:#F5F6F8}
+/* 背景主界面 */
+.tb{flex:0 0 40px;background:#fff;border-bottom:1px solid #E3E6EB;display:flex;align-items:center;padding-left:12px}
+.tb-logo{width:18px;height:18px;border-radius:5px;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center}
+.tb-name{font-size:12.5px;font-weight:600;margin-left:8px}
+.tb-led{font-size:12px;color:#7A8290;margin-left:10px;padding-left:10px;border-left:1px solid #E3E6EB}
+.tb-sp{flex:1}
+.wbtn{width:46px;height:39px;display:flex;align-items:center;justify-content:center;color:#5A6272}
+.tlb{flex:0 0 56px;background:#fff;border-bottom:1px solid #E3E6EB;display:flex;align-items:center;gap:10px;padding:0 16px}
+.msw{display:flex;align-items:center;height:32px;border:1px solid #DDE1E7;border-radius:6px;background:#fff}
+.msw-i{width:28px;height:30px;display:flex;align-items:center;justify-content:center;color:#6B7280}
+.msw-t{width:110px;height:30px;line-height:30px;text-align:center;font-size:13px;font-weight:600;border-left:1px solid #EDEFF3;border-right:1px solid #EDEFF3}
+.search{width:250px;height:32px;border:1px solid #DDE1E7;border-radius:6px;display:flex;align-items:center;padding:0 10px;gap:7px;color:#9AA1AC;background:#fff}
+.tbtn{height:32px;border:1px solid #DDE1E7;border-radius:6px;background:#fff;display:flex;align-items:center;gap:6px;padding:0 11px;font-size:12.5px;color:#4A5160}
+.sp{flex:1}
+.primary{height:34px;border-radius:6px;background:#2563EB;color:#fff;display:flex;align-items:center;gap:6px;padding:0 14px;font-size:13px;font-weight:600}
+.body{flex:1;display:flex;min-height:0}
+.nav{flex:0 0 248px;background:#FBFCFD;border-right:1px solid #E6E8EC;padding:10px 0}
+.nav-i{height:36px;display:flex;align-items:center;gap:10px;margin:1px 8px;padding:0 10px;border-radius:6px;color:#4A5160;font-size:13px}
+.nav-i.on{background:#EAF1FF;color:#2563EB;font-weight:600}
+.nav-i .cnt{margin-left:auto;font-size:11px;color:#9AA1AC;font-weight:400}
+.nav-div{height:1px;background:#E9EBF0;margin:10px 16px}
+.acc-hd{display:flex;justify-content:space-between;padding:2px 18px 4px;font-size:11px;color:#9AA1AC}
+.acc{height:38px;display:flex;align-items:center;gap:9px;padding:0 16px}
+.acc-ic{width:22px;height:22px;border-radius:5px;background:#EEF1F5;color:#5A6272;display:flex;align-items:center;justify-content:center;font-size:11px}
+.acc-n{flex:1;font-size:12.5px;color:#3A4150}
+.acc-v{font-size:12px;color:#1F2430;font-weight:500}
+.acc-v.neg{color:#DC2626}
+.mid{flex:1;min-width:0;background:#fff;display:flex;flex-direction:column}
+.kpi{flex:0 0 68px;display:flex;border-bottom:1px solid #E9EBF0}
+.kpi-c{flex:1;padding:11px 14px 0;border-right:1px solid #F0F2F5}
+.kpi-k{font-size:11px;color:#9AA1AC}
+.kpi-v{font-size:16px;font-weight:600;margin-top:2px}
+.kpi-sub{font-size:11px;color:#9AA1AC;margin-top:1px}
+.cols{flex:0 0 33px;display:flex;align-items:center;padding:0 16px;background:#FAFBFC;border-bottom:1px solid #E9EBF0;font-size:11px;color:#9AA1AC}
+.cols .c1{flex:1}.cols .c2{width:140px}.cols .c3{width:108px;text-align:right}
+.grp{height:28px;display:flex;align-items:center;padding:0 16px;background:#F7F8FA;border-bottom:1px solid #F0F2F5;font-size:12px;color:#5A6272}
+.grp b{font-weight:600;color:#3A4150}
+.gsum{margin-left:auto;font-size:11px;color:#9AA1AC}
+.row{height:45px;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid #F4F5F8}
+.badge{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff}
+.tm{width:52px;flex:0 0 52px;margin-left:10px;font-size:11px;color:#AEB4BE}
+.sum{flex:1;font-size:13px}
+.subx{font-size:11px;color:#9AA1AC;margin-left:6px}
+.acc-c{width:140px;font-size:12px;color:#7A8290}
+.amt{width:108px;text-align:right;font-size:13px;font-weight:600}
+.amt.pos{color:#15803D}
+.det{flex:0 0 352px;background:#fff;border-left:1px solid #E6E8EC;padding:13px 16px}
+.det-hd{height:24px;display:flex;align-items:center;font-size:11px;color:#9AA1AC;letter-spacing:.6px}
+.det-empty{margin-top:150px;text-align:center;color:#A6AEBB;font-size:12px}
+/* 遮罩 */
+.scrim{position:fixed;left:0;top:0;width:1440px;height:900px;background:rgba(15,18,24,.55)}
+/* 面板 */
+.modal{position:fixed;left:250px;top:118px;width:940px;height:664px;background:#fff;border-radius:12px;box-shadow:0 28px 72px rgba(9,14,25,.45),0 3px 8px rgba(9,14,25,.22);display:flex;flex-direction:column;overflow:hidden}
+.m-hd{flex:0 0 62px;display:flex;align-items:center;gap:14px;padding:0 18px 0 22px;border-bottom:1px solid #EBEDF1}
+.m-hd h2{font-size:16px;font-weight:600;letter-spacing:.2px}
+.m-hd .sub{font-size:11.5px;color:#9AA1AC}
+.seg{display:flex;height:30px;background:#F1F3F7;border-radius:6px;padding:2px}
+.seg div{height:26px;padding:0 16px;display:flex;align-items:center;font-size:12.5px;color:#5A6272;border-radius:4px}
+.seg div.on{background:#fff;color:#2563EB;font-weight:600;box-shadow:0 1px 2px rgba(16,24,40,.12)}
+.m-close{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#8A9199;background:#F5F6F8;margin-left:6px}
+.m-body{flex:1;display:flex;padding:14px 22px 0;gap:22px;min-height:0}
+.m-left{flex:0 0 552px;width:552px;display:flex;flex-direction:column}
+.m-right{flex:1;min-width:0;border-left:1px solid #EDEFF3;padding-left:22px;display:flex;flex-direction:column}
+.lbl{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#9AA1AC;letter-spacing:.5px;margin:12px 0 7px}
+.lbl:first-child{margin-top:0}
+.lbl em{font-style:normal;font-size:11px;color:#2563EB}
+.lbl .tag{font-size:10.5px;color:#15803D;background:#EAF7EF;border-radius:4px;padding:1px 6px}
+/* 大类 */
+.mega{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.mg{height:58px;border:1px solid #E3E6EB;border-radius:8px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;color:#4A5160}
+.mg .mc{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:#fff}
+.mg.on{border-color:#2563EB;background:#F2F7FF;color:#2563EB;font-weight:600;box-shadow:0 0 0 3px rgba(37,99,235,.10)}
+/* 小类 */
+.subs{display:flex;flex-wrap:wrap;gap:7px}
+.sb{height:27px;display:flex;align-items:center;padding:0 11px;border:1px solid #E3E6EB;border-radius:14px;background:#fff;font-size:12px;color:#3A4150}
+.sb.on{border-color:#2563EB;background:#2563EB;color:#fff;font-weight:600}
+.sb .plus{color:#9AA1AC;margin-right:4px}
+/* 账户 */
+.accs{display:flex;flex-wrap:wrap;gap:7px}
+.accb{height:30px;display:flex;align-items:center;gap:6px;padding:0 10px;border:1px solid #E3E6EB;border-radius:6px;font-size:12px;color:#3A4150;background:#fff}
+.accb .d{width:7px;height:7px;border-radius:50%;background:#CBD2DC}
+.accb.on{border-color:#2563EB;background:#F2F7FF;color:#2563EB;font-weight:600}
+.accb.on .d{background:#2563EB}
+/* 时间 */
+.timerow{display:flex;align-items:center;gap:8px}
+.din{flex:1;height:34px;display:flex;align-items:center;gap:7px;padding:0 10px;border:1px solid #E3E6EB;border-radius:6px;background:#fff;font-size:12.5px}
+.tin{width:132px;height:34px;display:flex;align-items:center;justify-content:center;gap:2px;border:1px solid #E3E6EB;border-radius:6px;background:#fff;font-size:13px;font-weight:600}
+.tin.on{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.10);color:#2563EB}
+.tin .stepper{display:flex;flex-direction:column;gap:1px;margin-left:6px;color:#9AA1AC}
+.tin .stepper i{font-style:normal;font-size:7px;line-height:7px}
+.dq{height:34px;padding:0 11px;display:flex;align-items:center;border:1px solid #E3E6EB;border-radius:6px;font-size:12px;color:#4A5160;background:#fff}
+.dq.on{border-color:#2563EB;color:#2563EB;background:#F2F7FF;font-weight:600}
+/* 备注 */
+.note{height:36px;display:flex;align-items:center;padding:0 11px;border:1px solid #2563EB;border-radius:6px;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.10);font-size:13px}
+.caret{width:1.5px;height:15px;background:#2563EB;margin-left:2px}
+.tagrow{display:flex;gap:6px;margin-top:8px}
+.sug{height:22px;padding:0 9px;display:flex;align-items:center;border:1px dashed #CFD6E0;border-radius:5px;font-size:11px;color:#7A8290}
+/* 金额 */
+.amt-l{font-size:11px;color:#9AA1AC;letter-spacing:.5px}
+.amt-v{display:flex;align-items:baseline;gap:7px;margin-top:1px}
+.amt-v .cur{font-size:20px;font-weight:500;color:#8A9199}
+.amt-v .num{font-size:38px;font-weight:600;letter-spacing:-1.2px;line-height:1.15}
+.amt-hint{font-size:11px;color:#9AA1AC;margin-top:2px}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.key{height:44px;border:1px solid #E3E6EB;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:500;color:#2A303C}
+.key.fn{background:#F7F8FA;color:#5A6272;font-size:12.5px}
+.tipcard{margin-top:auto;background:#F7F9FC;border:1px solid #E9EEF6;border-radius:8px;padding:10px 12px 11px}
+.tipcard .h{font-size:11px;color:#9AA1AC;display:flex;justify-content:space-between}
+.tipcard .b{display:flex;align-items:baseline;gap:7px;margin-top:3px}
+.tipcard .n{font-size:15px;font-weight:600}
+.tipcard .p{font-size:11px;color:#7A8290}
+.tipcard.warn{background:#FFFBEB;border-color:#FDE68A}
+.tipcard.warn .h,.tipcard.warn .p{color:#B45309}
+/* 底部 */
+.m-ft{flex:0 0 62px;border-top:1px solid #EBEDF1;background:#FCFCFD;display:flex;align-items:center;padding:0 18px 0 22px;gap:8px}
+.m-ft .hint{font-size:11px;color:#9AA1AC;display:flex;align-items:center;gap:6px}
+.kbd{font-size:10px;line-height:15px;padding:0 4px;border:1px solid #E0E3E9;border-radius:3px;background:#fff;color:#8A9199}
+.btn2g{height:34px;padding:0 14px;border:1px solid #DDE1E7;border-radius:6px;background:#fff;display:flex;align-items:center;gap:6px;font-size:13px;color:#4A5160}
+.btn1{height:34px;padding:0 16px;border-radius:6px;background:#2563EB;color:#fff;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;box-shadow:0 1px 2px rgba(37,99,235,.30)}
+/* 转账态 */
+.fromto{display:flex;align-items:center;gap:10px}
+.ft-card{flex:1;height:56px;border:1px solid #E3E6EB;border-radius:8px;background:#fff;padding:8px 11px;display:flex;flex-direction:column;justify-content:center}
+.ft-card .k{font-size:10.5px;color:#9AA1AC;letter-spacing:.5px}
+.ft-card .v{font-size:13px;font-weight:600;margin-top:1px;display:flex;align-items:center;gap:6px}
+.ft-card.blue{border-color:#2563EB;background:#F5F9FF}
+.arrow{width:34px;height:34px;border-radius:50%;background:#EAF1FF;color:#2563EB;display:flex;align-items:center;justify-content:center;flex:0 0 34px}
+.radio2{display:flex;gap:8px}
+.rc{flex:1;border:1px solid #E3E6EB;border-radius:8px;padding:9px 11px;background:#fff}
+.rc.on{border-color:#2563EB;background:#F2F7FF;box-shadow:0 0 0 3px rgba(37,99,235,.10)}
+.rc .t{font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:6px}
+.rc .d{font-size:11px;color:#9AA1AC;margin-top:2px}
+.rc .dot{width:12px;height:12px;border-radius:50%;border:1.5px solid #C3CAD4;display:flex;align-items:center;justify-content:center}
+.rc.on .dot{border-color:#2563EB}
+.rc.on .dot i{width:6px;height:6px;border-radius:50%;background:#2563EB;display:block}
+.inline{display:flex;gap:8px}
+.in{flex:1;height:34px;display:flex;align-items:center;padding:0 10px;border:1px solid #E3E6EB;border-radius:6px;background:#fff;font-size:12.5px;color:#3A4150}
+.sel{height:34px;display:flex;align-items:center;gap:8px;padding:0 10px;border:1px solid #E3E6EB;border-radius:6px;background:#fff;font-size:12.5px;color:#3A4150}
+</style></head><body>
+
+<div class="app">
+  <div class="tb">
+    <div class="tb-logo">¥</div><div class="tb-name">小账本</div>
+    <div class="tb-led">个人账本 ▾ · 2026 年</div>
+    <div class="tb-sp"></div>
+    <div class="wbtn">—</div><div class="wbtn">▢</div><div class="wbtn">✕</div>
+  </div>
+  <div class="tlb">
+    <div class="msw"><div class="msw-i">‹</div><div class="msw-t">2026 年 11 月</div><div class="msw-i">›</div></div>
+    <div class="search">⌕ <span>搜索摘要、分类、账户、金额</span></div>
+    <div class="tbtn">筛选</div>
+    <div class="sp"></div>
+    <div class="tbtn">命令 <span class="kbd">Ctrl K</span></div>
+    <div class="tbtn">导出</div>
+    <div class="primary">＋ 记一笔</div>
+  </div>
+  <div class="body">
+    <div class="nav">
+      <div class="nav-i on">工作台</div><div class="nav-i">概览</div><div class="nav-i">流水</div><div class="nav-i">报表</div><div class="nav-i">预算</div><div class="nav-i">账户</div><div class="nav-i">设置</div>
+      <div class="nav-div"></div>
+      <div class="acc-hd"><span>账户</span><span>5</span></div>
+      <div class="acc"><div class="acc-ic">卡</div><div class="acc-n">招商银行储蓄卡</div><div class="acc-v">¥28,460.32</div></div><div class="acc"><div class="acc-ic">支</div><div class="acc-n">支付宝</div><div class="acc-v">¥3,218.90</div></div><div class="acc"><div class="acc-ic">微</div><div class="acc-n">微信零钱</div><div class="acc-v">¥842.15</div></div><div class="acc"><div class="acc-ic">现</div><div class="acc-n">现金</div><div class="acc-v">¥560.00</div></div><div class="acc"><div class="acc-ic">信</div><div class="acc-n">招商银行信用卡</div><div class="acc-v neg">-¥2,184.50</div></div>
+    </div>
+    <div class="mid">
+      <div class="kpi">
+        <div class="kpi-c"><div class="kpi-k">本月支出</div><div class="kpi-v">¥5,907.90</div><div class="kpi-sub">↓ 9.7% 较 10 月</div></div>
+        <div class="kpi-c"><div class="kpi-k">本月收入</div><div class="kpi-v">¥18,758.00</div><div class="kpi-sub">—</div></div>
+        <div class="kpi-c"><div class="kpi-k">本月结余</div><div class="kpi-v">¥12,850.10</div><div class="kpi-sub">结余率 68.5%</div></div>
+        <div class="kpi-c"><div class="kpi-k">预算剩余</div><div class="kpi-v">¥592.10</div><div class="kpi-sub">已用 90.9%</div></div>
+      </div>
+      <div class="cols"><div class="c1">分类 · 时间 · 摘要</div><div class="c2">账户</div><div class="c3">金额</div></div>
+      <div class="grp"><b>今天 11-12 周四</b><span class="gsum">支出 ¥297.00</span></div><div class="row"><div class="badge" style="background:#EF4444">餐</div><div class="tm">12:24</div><div class="sum">午餐 · 沙县小吃<span class="subx">午餐</span></div><div class="acc-c">支付宝</div><div class="amt">-¥23.00</div></div><div class="row"><div class="badge" style="background:#06B6D4">交</div><div class="tm">09:12</div><div class="sum">地铁 2 号线<span class="subx">通勤</span></div><div class="acc-c">微信零钱</div><div class="amt">-¥6.00</div></div><div class="row"><div class="badge" style="background:#F59E0B">购</div><div class="tm">08:40</div><div class="sum">键帽 · 轴体</div><div class="acc-c">招商银行信用卡</div><div class="amt">-¥268.00</div></div><div class="grp"><b>11-11 周三</b><span class="gsum">支出 ¥1,337.00</span></div><div class="row"><div class="badge" style="background:#EF4444">餐</div><div class="tm">15:05</div><div class="sum">星巴克 香草拿铁<span class="subx">咖啡奶茶</span></div><div class="acc-c">支付宝</div><div class="amt">-¥38.00</div></div><div class="row"><div class="badge" style="background:#F59E0B">购</div><div class="tm">11:30</div><div class="sum">京东 · 27 寸显示器</div><div class="acc-c">招商银行信用卡</div><div class="amt">-¥1,299.00</div></div><div class="row"><div class="badge" style="background:#8B5CF6">住</div><div class="tm">20:00</div><div class="sum">房租 · 11 月</div><div class="acc-c">招商银行储蓄卡</div><div class="amt">-¥3,200.00</div></div>
+    </div>
+    <div class="det">
+      <div class="det-hd">交易详情</div>
+      <div class="det-empty">选中一笔流水<br>分类、账户、备注与标签会显示在这里</div>
+    </div>
+  </div>
+</div>
+
+
+<div class="scrim"></div>
+<div class="modal">
+  <div class="m-hd">
+    <h2>编辑一笔</h2>
+    <div class="sub">原记录：11-12 周四 12:30 · 午餐 ¥28.00</div>
+    <div class="sp"></div>
+    <div class="sub">Ctrl+Enter 保存修改</div>
+    <div class="m-close">✕</div>
+  </div>
+  <div class="m-body">
+    <div class="m-left">
+      <div class="lbl"><span>支出大类</span><em>餐饮</em></div>
+      <div class="mega"><div class="mg on"><div class="mc" style="background:#EF4444">餐</div>餐饮</div><div class="mg "><div class="mc" style="background:#06B6D4">交</div>交通</div><div class="mg "><div class="mc" style="background:#F59E0B">购</div>购物</div><div class="mg "><div class="mc" style="background:#8B5CF6">住</div>住房</div><div class="mg "><div class="mc" style="background:#3B82F6">娱</div>娱乐</div><div class="mg "><div class="mc" style="background:#10B981">医</div>医疗</div><div class="mg "><div class="mc" style="background:#64748B">讯</div>通讯</div><div class="mg "><div class="mc" style="background:#EC4899">育</div>教育</div></div>
+
+      <div class="lbl"><span>小类</span><em>餐饮 › 咖啡奶茶</em></div>
+      <div class="subs"><div class="sb ">早餐</div><div class="sb">午餐</div><div class="sb ">晚餐</div><div class="sb ">外卖</div><div class="sb on">咖啡奶茶</div><div class="sb ">聚餐</div><div class="sb ">买菜</div><div class="sb ">零食</div><div class="sb"><span class="plus">＋</span>新建小类</div></div>
+
+      <div class="lbl"><span>账户</span><span class="tag">本账本 5 个</span></div>
+      <div class="accs"><div class="accb "><span class="d"></span>招商银行储蓄卡</div><div class="accb on"><span class="d"></span>支付宝</div><div class="accb "><span class="d"></span>微信零钱</div><div class="accb "><span class="d"></span>现金</div><div class="accb "><span class="d"></span>招商银行信用卡</div></div>
+
+      <div class="lbl"><span>时间</span><em>修改后按新时间重新排序</em></div>
+      <div class="timerow">
+        <div class="din on" style="border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.10)">📅 2026-11-12 周四</div>
+        <div class="tin on">18 : 45<span class="stepper"><i>▴</i><i>▾</i></span></div>
+        <div class="dq">现在</div><div class="dq">昨天</div><div class="dq">前天</div>
+      </div>
+      <div style="font-size:11px;color:#B45309;margin-top:6px">⚠ 时间由 12:30 改为 18:45，保存后会移到当天晚间的顺序</div>
+
+      <div class="lbl"><span>备注</span></div>
+      <div class="note">公司楼下 · 下午茶<span class="caret"></span></div>
+    </div>
+    <div class="m-right">
+      <div class="amt-l">金额</div>
+      <div class="amt-v"><span class="cur">¥</span><span class="num">38.00</span></div>
+      <div class="amt-hint">原金额 ¥28.00 → 新金额 ¥38.00</div>
+      <div class="pad"><div class="key">1</div><div class="key">2</div><div class="key">3</div><div class="key">4</div><div class="key">5</div><div class="key">6</div><div class="key">7</div><div class="key">8</div><div class="key">9</div><div class="key fn">.</div><div class="key">0</div><div class="key fn">⌫</div></div>
+      <div class="tipcard">
+        <div class="h"><span>编辑历史</span><span>可 Ctrl+Z 撤销</span></div>
+        <div class="b"><span class="n" style="font-size:13px">11-12 12:30</span><span class="p">由「午餐」改为「下午茶」</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="m-ft">
+    <div class="hint"><span class="kbd">Ctrl+Z</span>撤销修改</div>
+    <div class="sp"></div>
+    <div class="btn2g" style="color:#DC2626;border-color:#FCA5A5">删除</div>
+    <div class="btn2g">取消</div>
+    <div class="btn1">保存修改</div>
+  </div>
+</div>
+
+</body></html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>方案 D · 极简速记 · 03 统计</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden;margin:0}
+body{font-family:"Segoe UI Variable Text","Segoe UI","Microsoft YaHei UI","Microsoft YaHei",sans-serif;background:#0E1116;color:#E9EBEE;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+:root{--bg:#0E1116;--sf:#161A20;--sf2:#1C222A;--bd:rgba(255,255,255,.07);--bd2:rgba(255,255,255,.045);--t1:#E9EBEE;--t2:#98A1AC;--t3:#6B7480;--t4:#4E5661;--gd:#E4B363;--gd2:rgba(228,179,99,.12)}
+svg{display:block}
+.app{width:1440px;height:900px;display:flex;flex-direction:column;border:1px solid #232830;background:#0E1116}
+.tb{height:40px;flex:0 0 40px;background:#0B0E13;border-bottom:1px solid var(--bd2);display:flex;align-items:center;padding-left:14px;gap:9px}
+.logo{width:15px;height:15px;border-radius:4px;background:linear-gradient(140deg,#E4B363,#C08A3E);box-shadow:0 0 0 1px rgba(228,179,99,.25)}
+.tb-t{font-size:12.5px;font-weight:600;letter-spacing:.4px}
+.tb-s{font-size:11px;color:var(--t3)}
+.tb-d{width:1px;height:11px;background:rgba(255,255,255,.1)}
+.tb-r{margin-left:auto;display:flex;height:40px}
+.wb{width:46px;height:40px;display:flex;align-items:center;justify-content:center;color:#7C8590}
+.wb:hover{background:rgba(255,255,255,.06);color:#E9EBEE}
+.wb.x:hover{background:#E81123;color:#fff}
+.nav{height:48px;flex:0 0 48px;border-bottom:1px solid var(--bd2);background:#0E1116}
+.nav-in{width:820px;margin:0 auto;height:48px;display:flex;align-items:center}
+.nv{height:48px;padding:0 15px;display:flex;align-items:center;font-size:12.5px;color:#8A93A0;position:relative;letter-spacing:.3px}
+.nv.on{color:#E9EBEE;font-weight:600}
+.nv.on:after{content:"";position:absolute;left:15px;right:15px;bottom:0;height:2px;border-radius:2px 2px 0 0;background:var(--gd)}
+.cmd{margin-left:auto;display:flex;align-items:center;gap:5px;height:28px;padding:0 10px 0 7px;border-radius:8px;background:var(--sf);border:1px solid var(--bd)}
+.cmd span.t{font-size:11px;color:var(--t3);margin-left:3px}
+.kbd{font-size:10px;font-weight:600;color:#C6CCD4;background:#222831;border:1px solid rgba(255,255,255,.1);border-bottom-width:2px;border-radius:4px;padding:1.5px 5px;letter-spacing:.3px}
+.main{flex:1;min-height:0}
+.cont{width:820px;margin:0 auto;height:100%;display:flex;flex-direction:column;padding-top:18px}
+.hero{height:120px;display:flex;align-items:flex-start}
+.hcol{flex:1}
+.hlb{font-size:11px;color:var(--t3);letter-spacing:1.2px;margin-bottom:9px}
+.hv{font-size:44px;font-weight:600;letter-spacing:-1.6px;line-height:1;display:flex;align-items:baseline;gap:0}
+.hv .cur{font-size:26px;font-weight:500;color:var(--t2);letter-spacing:0;margin-right:3px}
+.hv .d{font-size:22px;color:var(--t3);font-weight:500}
+.hs{font-size:11.5px;color:var(--t3);margin-top:10px;display:flex;align-items:center;gap:8px}
+.hs .gd{color:var(--gd)}
+.hsep{width:1px;align-self:stretch;background:var(--bd2);margin:6px 30px 26px}
+.bud{height:54px;display:flex;align-items:center;gap:14px;border-top:1px solid var(--bd2);border-bottom:1px solid var(--bd2)}
+.bud .l{font-size:11px;color:var(--t3);letter-spacing:.6px;white-space:nowrap}
+.bud .v{font-size:13px;font-weight:600;letter-spacing:-.2px;white-space:nowrap}
+.bbar{flex:1;height:4px;border-radius:2px;background:#20262E;overflow:hidden}
+.bbar i{display:block;height:4px;border-radius:2px;background:linear-gradient(90deg,#C08A3E,#E4B363 72%,#F2C97D)}
+.bud .r{font-size:11.5px;color:var(--t2);white-space:nowrap}
+.bud .r b{color:var(--gd);font-weight:600}
+.stx{height:104px;display:flex;flex-direction:column;justify-content:center;gap:14px}
+.stx-t{font-size:11px;color:var(--t3);letter-spacing:1.2px}
+.strip{height:6px;display:flex;gap:2px}
+.strip i{border-radius:3px}
+.slg{display:flex;gap:0}
+.slg div{flex:1;display:flex;align-items:baseline;gap:7px}
+.slg u{text-decoration:none;font-size:11.5px;color:var(--t2);width:42px;text-align:right;letter-spacing:.2px}
+.slg b{font-size:12.5px;font-weight:600;letter-spacing:-.2px}
+.slg span{font-size:11.5px;color:var(--t2)}
+.list{flex:1;display:flex;flex-direction:column;min-height:0}
+.lh{height:26px;display:flex;align-items:center;font-size:10.5px;color:var(--t4);letter-spacing:.8px;border-bottom:1px solid var(--bd2)}
+.row{height:35px;display:flex;align-items:center;font-size:12.5px;border-bottom:1px solid rgba(255,255,255,.032);position:relative}
+.row.sel{background:rgba(228,179,99,.055)}
+.row.sel:before{content:"";position:absolute;left:-14px;top:7px;bottom:7px;width:2px;border-radius:2px;background:var(--gd)}
+.c-dt{width:96px;font-size:11px;color:var(--t3);letter-spacing:.2px}
+.c-sm{flex:1;color:#DCDFE4}
+.c-ca{width:58px;font-size:11px;color:var(--t3)}
+.c-ac{width:132px;font-size:11px;color:var(--t4);text-align:right;padding-right:22px}
+.c-am{width:104px;text-align:right;font-weight:600;font-size:13px;letter-spacing:-.2px}
+.c-am.in{color:var(--gd)}
+.hint{height:44px;flex:0 0 44px;background:#0B0E13;border-top:1px solid var(--bd2)}
+.hint-in{width:820px;margin:0 auto;height:44px;display:flex;align-items:center;gap:18px;font-size:11px;color:var(--t4)}
+.hint-in i{display:flex;align-items:center;gap:5px;font-style:normal}
+.hint-in .r{margin-left:auto;color:var(--t3);display:flex;align-items:center;gap:6px}
+.d3h{height:62px;display:flex;align-items:center;gap:14px}
+.d3t{font-size:20px;font-weight:600;letter-spacing:-.3px}
+.msel{display:flex;align-items:center;height:28px;border:1px solid var(--bd);border-radius:8px;padding:0 3px;background:var(--sf)}
+.msel .ar{width:22px;height:22px;display:flex;align-items:center;justify-content:center;color:var(--t3)}
+.msel .mc{font-size:12px;font-weight:600;color:#E9EBEE;padding:0 7px;letter-spacing:.3px}
+.d3hk{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--t4)}
+.d3hk .sp{color:#333A44;margin:0 4px}
+.d3hero{height:150px;display:flex;flex-direction:column;justify-content:center}
+.hv2{font-size:56px;font-weight:600;letter-spacing:-2.4px;line-height:1;display:flex;align-items:baseline;margin-bottom:15px}
+.hv2 .cur{font-size:32px;color:var(--t2);font-weight:500;margin-right:5px;letter-spacing:-1px}
+.hv2 .d{font-size:26px;color:var(--t3);font-weight:500}
+.d3meta{font-size:12px;color:var(--t3);display:flex;align-items:center;gap:7px}
+.d3meta b{color:#C9D0D8;font-weight:600}
+.d3meta b.gd{color:var(--gd)}
+.d3meta .sp{color:#333A44}
+.d3spark{height:132px;display:flex;flex-direction:column;justify-content:center;gap:11px}
+.st{font-size:10.5px;color:var(--t3);letter-spacing:1.2px}
+.spk{display:flex;align-items:flex-end;gap:30px}
+.spkc{width:32px;display:flex;flex-direction:column;align-items:center}
+.spkc i{display:block;width:32px;border-radius:3px 3px 0 0;background:#272E38}
+.spkc i.on{background:linear-gradient(180deg,#F2C97D,#BE8740)}
+.spkc span{font-size:10.5px;color:var(--t4);margin-top:9px}
+.spkc b{font-size:11px;color:var(--gd);font-weight:600;margin-bottom:7px}
+.d3two{height:96px;display:flex;align-items:center}
+.t2c{flex:1}
+.t2c .lb{font-size:10.5px;color:var(--t3);letter-spacing:1.2px}
+.t2c .tv{font-size:26px;font-weight:600;letter-spacing:-.9px;margin:7px 0 6px;line-height:1}
+.t2c .tv.gd{color:var(--gd)}
+.t2c .ts{font-size:11px;color:var(--t3)}
+.vsep{width:1px;height:58px;background:var(--bd2)}
+.d3cat{height:310px;display:flex;flex-direction:column}
+.cr{height:38px;display:flex;align-items:center;gap:12px;font-size:12.5px}
+.cn{width:52px;color:#C9D0D8}
+.cb{flex:1;height:4px;border-radius:2px;background:#1A1F26;overflow:hidden}
+.cb i{display:block;height:4px;border-radius:2px;background:linear-gradient(90deg,#A87F45,#E4B363)}
+.cv{width:90px;text-align:right;font-weight:600;font-size:13px;letter-spacing:-.2px}
+.cp{width:50px;text-align:right;font-size:11px;color:var(--t3)}
+.cnote{height:34px;display:flex;align-items:center;font-size:11.5px;color:var(--t4);border-top:1px solid var(--bd2);margin-top:8px}</style>
+</head>
+<body><div class="app">
+<div class="tb">
+<div class="logo"></div>
+<div class="tb-t">记账</div>
+<div class="tb-d"></div>
+<div class="tb-s">林小满 · 个人账本</div>
+<div class="tb-r">
+<div class="wb"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14"/></svg></div>
+<div class="wb"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="5.5" y="5.5" width="13" height="13" rx="1.6"/></svg></div>
+<div class="wb x"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></div>
+</div>
+</div>
+<div class="nav"><div class="nav-in">
+<div class="nv">今日</div><div class="nv">流水</div><div class="nv on">统计</div>
+<div class="cmd"><span class="kbd">Ctrl</span><span class="kbd">K</span><span class="t">命令</span></div>
+</div></div>
+<div class="main">
+<div class="cont">
+<div class="d3h">
+<div class="d3t">统计</div>
+<div class="msel"><span class="ar"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg></span><span class="mc">11 月</span><span class="ar"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6l6 6-6 6"/></svg></span></div>
+<div class="d3hk"><span class="kbd">J</span><span class="kbd">K</span>切换月份<span class="sp">·</span><span class="kbd">T</span>切换维度<span class="sp">·</span><span class="kbd">Esc</span>返回</div>
+</div>
+<div class="d3hero">
+<div class="hlb">本月支出 · 2026 年 11 月</div>
+<div class="hv2"><span class="cur">¥</span>5,907<span class="d">.90</span></div>
+<div class="d3meta"><span>较 10 月 <b class="gd">↓ 9.7%</b></span><span class="sp">·</span><span>日均 <b>¥591</b></span><span class="sp">·</span><span><b>17 笔</b> 记账</span><span class="sp">·</span><span>预算已用 <b>90.9%</b></span></div>
+</div>
+<div class="d3spark">
+<div class="st" style="display:flex;justify-content:space-between;align-items:baseline"><span>近 6 月支出</span><span style="letter-spacing:0;color:#4E5661">最高 9 月 ¥7,860.00 · 最低 8 月 ¥5,480.00 · 均值 ¥6,306.32</span></div>
+<div class="spk">
+<div class="spkc"><i style="height:47px"></i><span>6月</span></div>
+<div class="spkc"><i style="height:48px"></i><span>7月</span></div>
+<div class="spkc"><i style="height:43px"></i><span>8月</span></div>
+<div class="spkc"><i style="height:62px"></i><span>9月</span></div>
+<div class="spkc"><i style="height:52px"></i><span>10月</span></div>
+<div class="spkc"><b>5,907.90</b><i class="on" style="height:47px"></i><span>11月</span></div>
+</div>
+</div>
+<div class="d3two">
+<div class="t2c"><div class="lb">本月收入</div><div class="tv">¥18,758.00</div><div class="ts">较 10 月 ↑ 4.2%</div></div>
+<div class="vsep"></div>
+<div class="t2c"><div class="lb">本月结余</div><div class="tv">¥12,850.10</div><div class="ts">结余率 68.5%</div></div>
+<div class="vsep"></div>
+<div class="t2c"><div class="lb">预算剩余</div><div class="tv gd">¥592.10</div><div class="ts">已用 90.9% · 接近超支</div></div>
+</div>
+<div class="d3cat">
+<div class="st" style="margin-bottom:6px">分类排行</div>
+<div class="cr"><span class="cn">住房</span><span class="cb"><i style="width:100%"></i></span><span class="cv">¥3,200.00</span><span class="cp">54.2%</span></div>
+<div class="cr"><span class="cn">购物</span><span class="cb"><i style="width:49%"></i></span><span class="cv">¥1,567.00</span><span class="cp">26.5%</span></div>
+<div class="cr"><span class="cn">餐饮</span><span class="cb"><i style="width:9.6%"></i></span><span class="cv">¥308.40</span><span class="cp">5.2%</span></div>
+<div class="cr"><span class="cn">人情</span><span class="cb"><i style="width:6.3%"></i></span><span class="cv">¥200.00</span><span class="cp">3.4%</span></div>
+<div class="cr"><span class="cn">教育</span><span class="cb"><i style="width:6.2%"></i></span><span class="cv">¥199.00</span><span class="cp">3.4%</span></div>
+<div class="cr"><span class="cn">娱乐</span><span class="cb"><i style="width:5.3%"></i></span><span class="cv">¥168.00</span><span class="cp">2.8%</span></div>
+<div class="cnote">其余 4 类（通讯 / 日用 / 医疗 / 交通）共 ¥265.50 · 全月 10 个分类</div>
+</div>
+</div>
+</div>
+<div class="hint"><div class="hint-in">
+<i><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>选择</i>
+<i><span class="kbd">Enter</span>保存</i>
+<i><span class="kbd">Esc</span>取消</i>
+<i><span class="kbd">Ctrl</span><span class="kbd">K</span>命令面板</i>
+<div class="r">2026-11-11 星期三 · 17 笔已同步</div>
+</div></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>方案 C · 数据驾驶舱 · 01 主界面</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden;margin:0}
+body{font-family:"Segoe UI Variable Text","Segoe UI","Microsoft YaHei UI","Microsoft YaHei",sans-serif;background:#F5F6FA;color:#171B33;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+:root{--ac:#4F46E5;--acd:#EEF0FF;--bd:#E7E9F2;--t1:#171B33;--t2:#5F6785;--t3:#98A0B8;--warn:#F59E0B;--dn:#DC2626;--ok:#16A34A}
+svg{display:block}
+.app{width:1440px;height:900px;display:flex;flex-direction:column;border:1px solid #D6D9E6}
+.tb{height:40px;flex:0 0 40px;background:#fff;border-bottom:1px solid var(--bd);display:flex;align-items:center;padding-left:12px;gap:9px}
+.tb-logo{width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,#4F46E5,#7C3AED);display:flex;align-items:center;justify-content:center;color:#fff}
+.tb-t{font-size:13px;font-weight:600}
+.tb-sep{width:1px;height:12px;background:#DDE0EC}
+.tb-s{font-size:12px;color:var(--t3)}
+.tb-r{margin-left:auto;display:flex;height:40px}
+.wb{width:46px;height:40px;display:flex;align-items:center;justify-content:center;color:#5B6280}
+.wb.x:hover{background:#E81123;color:#fff}
+.wrap{flex:1;display:flex;min-height:0}
+.rail{width:84px;flex:0 0 84px;background:#fff;border-right:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:2px}
+.ic{width:64px;height:52px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#8B93AA;position:relative}
+.ic span{font-size:10px;letter-spacing:.4px}
+.ic.on{background:var(--acd);color:var(--ac)}
+.ic.on:before{content:"";position:absolute;left:-10px;top:15px;width:3px;height:22px;border-radius:0 3px 3px 0;background:var(--ac)}
+.rail-sp{flex:1}
+.me{width:30px;height:30px;border-radius:50%;background:#E9EBF5;color:#5B6280;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:8px}
+.main{flex:1;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.hdr{height:26px;display:flex;align-items:center;gap:9px}
+.hdr-t{font-size:13px;font-weight:600}
+.hdr-s{font-size:12px;color:var(--t3)}
+.hdr-r{margin-left:auto;display:flex;align-items:center;gap:9px}
+.pill-w{height:24px;padding:0 10px;border-radius:999px;background:#FEF5E7;border:1px solid #F6D9AC;color:#B45309;font-size:11px;font-weight:600;display:flex;align-items:center;gap:5px}
+.btn-pri{height:28px;padding:0 12px;border-radius:9px;background:var(--ac);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px -2px rgba(79,70,229,.4)}
+.kpis{height:96px;display:flex;gap:12px}
+.kpi{flex:1;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:13px 16px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 1px 2px rgba(20,23,43,.04),0 10px 24px -14px rgba(20,23,43,.16)}
+.kpi-h{display:flex;align-items:center;justify-content:space-between;height:20px}
+.kpi-l{font-size:12px;color:var(--t2)}
+.kpi-b{font-size:24px;font-weight:600;letter-spacing:-.4px;line-height:1.05}
+.kpi-f{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--t3)}
+.chip-i{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.good{color:var(--ok);font-weight:600}
+.bad{color:var(--dn);font-weight:600}
+.ac{color:var(--ac);font-weight:600}.row2{height:570px;display:flex;gap:16px}
+.lcol{width:1000px;display:flex;flex-direction:column;gap:14px}
+.crow{height:278px;display:flex;gap:14px}
+.card{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:15px 18px;box-shadow:0 1px 2px rgba(20,23,43,.04),0 10px 26px -14px rgba(20,23,43,.16)}
+.ch{display:flex;align-items:center;justify-content:space-between;height:24px}
+.ch b{font-size:13px;font-weight:600;letter-spacing:.2px}
+.ch em{font-size:11px;color:var(--t3);font-style:normal}
+.ch em.wp{font-style:normal;font-size:10.5px;font-weight:600;color:#B45309;background:#FEF5E7;border:1px solid #F6D9AC;padding:2px 8px;border-radius:999px}
+.ringcard{width:380px;display:flex;flex-direction:column}
+.ringwrap{position:relative;height:142px;display:flex;align-items:center;justify-content:center;margin-top:4px}
+.ringc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.ringv{font-size:27px;font-weight:700;letter-spacing:-.8px;line-height:1}
+.ringk{font-size:10px;color:var(--t3);letter-spacing:1.2px}
+.rlg{margin-top:auto;display:flex;border-top:1px solid #F0F1F7;padding-top:11px}
+.rlg div{flex:1}
+.rlg div+div{border-left:1px solid #F0F1F7;padding-left:12px}
+.rlg span{font-size:10px;color:var(--t3)}
+.rlg b{display:block;font-size:13px;font-weight:600;margin-top:3px;letter-spacing:-.2px}
+.rlg b.w{color:#B45309}
+.trendcard{flex:1;display:flex;flex-direction:column}
+.stackcard{flex:1;display:flex;flex-direction:column}
+.sbar{height:46px;display:flex;margin-top:14px}
+.sbar i{display:flex;min-width:6px;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;font-style:normal;letter-spacing:.3px}
+.sbar i+i{box-shadow:inset 1px 0 0 #fff}.sbar i:first-child{border-radius:6px 0 0 6px}.sbar i:last-child{border-radius:0 6px 6px 0}.slg{flex:1;margin-top:16px;display:grid;grid-template-columns:repeat(5,1fr);gap:13px 16px;align-content:center}
+.slg div{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t2);white-space:nowrap}
+.slg b{font-size:11.5px;font-weight:600;color:#171B33;margin-left:auto}
+.slg u{text-decoration:none;font-size:10.5px;color:var(--t3);width:33px;text-align:right}
+.dot{width:7px;height:7px;border-radius:2px;flex:0 0 7px}
+.sfoot{margin-top:auto;height:32px;border-radius:10px;background:#F5F6FE;display:flex;align-items:center;gap:6px;padding:0 12px;font-size:11.5px;color:#4B5372}
+.sfoot b{color:var(--ac);font-weight:600}
+.rcol{width:300px;display:flex;flex-direction:column;gap:14px}
+.inscard{height:338px;display:flex;flex-direction:column}
+.ins{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed #EDEFF6}
+.ins:last-of-type{border-bottom:0}
+.ins-i{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:0 0 30px}
+.ins-t{font-size:12px;font-weight:600;margin-bottom:3px;letter-spacing:.2px}
+.ins-d{font-size:11px;color:var(--t2);line-height:1.45}
+.ins-m{margin-top:auto;height:30px;border-radius:9px;background:#F7F8FC;color:var(--t2);font-size:11.5px;display:flex;align-items:center;justify-content:center;gap:5px}
+.progcard{height:218px;display:flex;flex-direction:column}
+.prow{display:flex;align-items:baseline;justify-content:space-between;padding:5px 0;font-size:11.5px;color:var(--t2)}
+.prow b{font-size:13px;font-weight:600;color:#171B33}
+.pbar{height:6px;border-radius:3px;background:#EFF1F8;margin:auto 0 3px;overflow:hidden}
+.pbar i{display:block;height:6px;border-radius:3px;background:linear-gradient(90deg,#4F46E5,#8B5CF6 62%,#F59E0B)}
+.pnote{display:flex;justify-content:space-between;font-size:10.5px;color:var(--t3)}
+.dbars{margin-top:auto;display:flex;align-items:flex-end;gap:4px;height:58px;border-bottom:1px solid #F0F1F7;padding-bottom:1px}
+.dbars i{flex:1;border-radius:2px 2px 0 0;background:#DFE2EF;font-style:normal}
+.dcap{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:5px}
+.accs{height:86px;background:#fff;border:1px solid var(--bd);border-radius:16px;display:flex;align-items:center;padding:0 10px;box-shadow:0 1px 2px rgba(20,23,43,.04),0 10px 26px -14px rgba(20,23,43,.16)}
+.acc{flex:1;display:flex;align-items:center;gap:9px;padding:0 10px;height:54px}
+.acc+.acc{border-left:1px solid #F0F1F7}
+.acc-i{color:#8B93AA;flex:0 0 20px}
+.acc-n{font-size:11px;color:var(--t3);margin-bottom:3px}
+.acc-v{font-size:14px;font-weight:600;letter-spacing:-.2px}
+.net{flex:1.12;display:flex;align-items:center;gap:10px;padding:0 14px;height:62px;border-radius:12px;background:#F2F3FE;border:1px solid #E3E5FA;margin-left:6px}
+.net .acc-v{font-size:16px;color:var(--ac);font-weight:700}
+</style>
+</head>
+<body><div class="app">
+<div class="tb">
+<div class="tb-logo"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M4 19V10M10 19V4M16 19v-6"/><path d="M2 19h20"/></svg></div>
+<div class="tb-t">记账</div><div class="tb-sep"></div><div class="tb-s">林小满 · 个人账本 · 数据驾驶舱</div>
+<div class="tb-r">
+<div class="wb"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14"/></svg></div>
+<div class="wb"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="5.5" y="5.5" width="13" height="13" rx="1.6"/></svg></div>
+<div class="wb x"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></div>
+</div>
+</div>
+<div class="wrap">
+<div class="rail">
+<div class="ic on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3.2" y="3.2" width="7.4" height="7.4" rx="2"/><rect x="13.4" y="3.2" width="7.4" height="7.4" rx="2"/><rect x="3.2" y="13.4" width="7.4" height="7.4" rx="2"/><rect x="13.4" y="13.4" width="7.4" height="7.4" rx="2"/></svg><span>概览</span></div>
+<div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 6.5h16M4 12h16M4 17.5h9"/></svg><span>流水</span></div>
+<div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 20h18"/><path d="M7 20v-6M12 20V8M17 20v-9"/></svg><span>统计</span></div>
+<div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.4"/><circle cx="12" cy="12" r="3.6"/></svg><span>预算</span></div>
+<div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3.2 8.4A2.2 2.2 0 0 1 5.4 6.2h13.2a2.2 2.2 0 0 1 2.2 2.2v9.2a2.2 2.2 0 0 1-2.2 2.2H5.4a2.2 2.2 0 0 1-2.2-2.2z"/><path d="M20.8 10.6h-4.2a2.2 2.2 0 0 0 0 4.4h4.2"/></svg><span>账户</span></div>
+<div class="rail-sp"></div>
+<div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.4M12 18.8v2.4M4 8l2.1 1.2M17.9 14.8L20 16M4 16l2.1-1.2M17.9 9.2L20 8"/></svg><span>设置</span></div>
+<div class="me">林</div>
+</div>
+<div class="main"><div class="hdr">
+<div class="hdr-t">2026 年 11 月 11 日 · 星期三</div>
+<div class="hdr-s">林小满 · 个人账本 · 本月已记账 17 笔</div>
+<div class="hdr-r">
+<div class="pill-w"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5l8.2 14.2H3.8z"/><path d="M12 10v3.4M12 16.4h.01"/></svg>预算仅剩 ¥592.10</div>
+<div class="btn-pri"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>记一笔</div>
+</div>
+</div>
+<div class="kpis">
+<div class="kpi">
+<div class="kpi-h"><span class="kpi-l">本月支出</span><span class="chip-i" style="background:#FEF2F2;color:#DC2626"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10"/><path d="M17 9.6V17H9.6"/></svg></span></div>
+<div class="kpi-b">¥5,907.90</div>
+<div class="kpi-f"><span class="good">↓ 9.7%</span><span>较 10 月 ¥6,540.00</span></div>
+</div>
+<div class="kpi">
+<div class="kpi-h"><span class="kpi-l">本月收入</span><span class="chip-i" style="background:#ECFDF3;color:#16A34A"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M9.6 7H17v7.4"/></svg></span></div>
+<div class="kpi-b">¥18,758.00</div>
+<div class="kpi-f"><span class="good">↑ 4.2%</span><span>较 10 月 ¥18,000.00</span></div>
+</div>
+<div class="kpi">
+<div class="kpi-h"><span class="kpi-l">本月结余</span><span class="chip-i" style="background:#EEF0FF;color:#4F46E5"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.6" y="6.4" width="18.8" height="11.2" rx="2.4"/><circle cx="12" cy="12" r="2.6"/></svg></span></div>
+<div class="kpi-b">¥12,850.10</div>
+<div class="kpi-f"><span class="ac">结余率 68.5%</span><span>支出占收入 31.5%</span></div>
+</div>
+<div class="kpi">
+<div class="kpi-h"><span class="kpi-l">净资产</span><span class="chip-i" style="background:#F1F3F9;color:#5F6785"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3.2l8.4 4.4L12 12 3.6 7.6z"/><path d="M3.6 12.4L12 16.8l8.4-4.4"/><path d="M3.6 16.6L12 21l8.4-4.4"/></svg></span></div>
+<div class="kpi-b">¥30,896.87</div>
+<div class="kpi-f"><span>5 个账户</span><span class="bad">信用卡 −¥2,184.50</span></div>
+</div>
+</div><div class="row2">
+<div class="lcol">
+<div class="crow">
+<div class="card ringcard">
+<div class="ch"><b>本月预算执行</b><em class="wp">接近超支</em></div>
+<div class="ringwrap">
+<svg width="142" height="142" viewBox="0 0 142 142">
+<circle cx="71" cy="71" r="57" fill="none" stroke="#EFF1F8" stroke-width="13"/>
+<circle cx="71" cy="71" r="57" fill="none" stroke="#4F46E5" stroke-width="13" stroke-dasharray="250.7 358.14" transform="rotate(-90 71 71)"/>
+<circle cx="71" cy="71" r="57" fill="none" stroke="#F59E0B" stroke-width="13" stroke-dasharray="74.85 283.29" transform="rotate(162 71 71)"/>
+</svg>
+<div class="ringc"><div class="ringv">90.9%</div><div class="ringk">已用</div></div>
+</div>
+<div class="rlg">
+<div><span>预算</span><b>¥6,500.00</b></div>
+<div><span>已支出</span><b>¥5,907.90</b></div>
+<div><span>剩余</span><b class="w">¥592.10</b></div>
+</div>
+</div>
+<div class="card trendcard">
+<div class="ch"><b>近 6 月支出趋势</b><em>均值 ¥6,306.32</em></div>
+<svg width="566" height="190" viewBox="0 0 566 190" style="margin-top:3px">
+<defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4F46E5" stop-opacity=".28"/><stop offset="1" stop-color="#4F46E5" stop-opacity="0"/></linearGradient></defs>
+<g stroke="#EDEFF6" stroke-width="1"><path d="M52 27.5H552M52 65H552M52 102.5H552"/><path d="M52 140H552" stroke="#D9DDEC"/></g>
+<g font-size="10" fill="#98A0B8" text-anchor="end"><text x="44" y="31">8,000</text><text x="44" y="68.5">7,000</text><text x="44" y="106">6,000</text><text x="44" y="143.5">5,000</text></g>
+<path d="M52 105.13L152 98L252 122L352 32.75L452 82.25L552 105.96L552 140L52 140Z" fill="url(#ag)"/>
+<path d="M52 105.13L152 98L252 122L352 32.75L452 82.25L552 105.96" fill="none" stroke="#4F46E5" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+<g fill="#fff" stroke="#4F46E5" stroke-width="2"><circle cx="52" cy="105.13" r="3.4"/><circle cx="152" cy="98" r="3.4"/><circle cx="252" cy="122" r="3.4"/><circle cx="352" cy="32.75" r="3.4"/><circle cx="452" cy="82.25" r="3.4"/></g>
+<circle cx="552" cy="105.96" r="8.6" fill="#4F46E5" opacity=".13"/>
+<circle cx="552" cy="105.96" r="4.4" fill="#4F46E5" stroke="#fff" stroke-width="2"/>
+<g font-size="10" fill="#5F6785" text-anchor="middle"><text x="52" y="96.13">5,930</text><text x="152" y="89">6,120</text><text x="252" y="113">5,480</text><text x="352" y="23.75">7,860</text><text x="452" y="73.25">6,540</text><text x="552" y="96.96" text-anchor="end" fill="#4F46E5" font-weight="600">5,907.90</text></g>
+<g font-size="10" fill="#98A0B8" text-anchor="middle"><text x="52" y="168">6月</text><text x="152" y="168">7月</text><text x="252" y="168">8月</text><text x="352" y="168">9月</text><text x="452" y="168">10月</text><text x="552" y="168">11月</text></g>
+</svg>
+</div>
+</div><div class="card stackcard">
+<div class="ch"><b>本月支出结构</b><em>合计 ¥5,907.90 · 10 个分类</em></div>
+<div class="sbar">
+<i style="flex:54.2;background:#6366F1">54.2%</i>
+<i style="flex:26.5;background:#F59E0B">26.5%</i>
+<i style="flex:5.2;background:#EF4444"></i>
+<i style="flex:3.4;background:#EC4899"></i>
+<i style="flex:3.4;background:#8B5CF6"></i>
+<i style="flex:2.8;background:#06B6D4"></i>
+<i style="flex:1.7;background:#64748B"></i>
+<i style="flex:1.5;background:#22C55E"></i>
+<i style="flex:0.8;background:#14B8A6"></i>
+<i style="flex:0.6;background:#3B82F6"></i>
+</div>
+<div class="slg">
+<div><span class="dot" style="background:#6366F1"></span>住房<b>¥3,200.00</b><u>54.2%</u></div>
+<div><span class="dot" style="background:#F59E0B"></span>购物<b>¥1,567.00</b><u>26.5%</u></div>
+<div><span class="dot" style="background:#EF4444"></span>餐饮<b>¥308.40</b><u>5.2%</u></div>
+<div><span class="dot" style="background:#EC4899"></span>人情<b>¥200.00</b><u>3.4%</u></div>
+<div><span class="dot" style="background:#8B5CF6"></span>教育<b>¥199.00</b><u>3.4%</u></div>
+<div><span class="dot" style="background:#06B6D4"></span>娱乐<b>¥168.00</b><u>2.8%</u></div>
+<div><span class="dot" style="background:#64748B"></span>通讯<b>¥99.00</b><u>1.7%</u></div>
+<div><span class="dot" style="background:#22C55E"></span>日用<b>¥86.40</b><u>1.5%</u></div>
+<div><span class="dot" style="background:#14B8A6"></span>医疗<b>¥45.50</b><u>0.8%</u></div>
+<div><span class="dot" style="background:#3B82F6"></span>交通<b>¥34.60</b><u>0.6%</u></div>
+</div>
+<div class="sfoot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M12 8.2v.01M11.2 16h1.6"/></svg>住房 + 购物 合计 <b>80.7%</b>，其中房租 <b>¥3,200.00</b> 为最大单笔</div>
+</div>
+</div>
+<div class="rcol">
+<div class="card inscard">
+<div class="ch"><b>洞察提醒</b><em>4 条</em></div>
+<div class="ins">
+<div class="ins-i" style="background:#FEF5E7;color:#B45309"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16.5l5.4-6 3.6 3.2 6.6-7.2"/><path d="M14.6 6.5h5.4v5"/></svg></div>
+<div><div class="ins-t">购物占比偏高</div><div class="ins-d">¥1,567.00，占总支出 26.5%，为第二大分类</div></div>
+</div>
+<div class="ins">
+<div class="ins-i" style="background:#FEF5E7;color:#B45309"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.4"/><circle cx="12" cy="12" r="3.6"/></svg></div>
+<div><div class="ins-t">预算接近上限</div><div class="ins-d">已用 90.9%，仅剩 ¥592.10</div></div>
+</div>
+<div class="ins">
+<div class="ins-i" style="background:#EEF0FF;color:#4F46E5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3.4 10.4L12 3.4l8.6 7"/><path d="M5.6 9.6v10h12.8v-10"/></svg></div>
+<div><div class="ins-t">大额支出提醒</div><div class="ins-d">11-09 房租支出 ¥3,200.00</div></div>
+</div>
+<div class="ins">
+<div class="ins-i" style="background:#ECFDF3;color:#16A34A"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2l7.4 3v6.2c0 4.2-3 7-7.4 8.4-4.4-1.4-7.4-4.2-7.4-8.4V6.2z"/><path d="M8.8 12.2l2.2 2.2 4.2-4.4"/></svg></div>
+<div><div class="ins-t">收支保持健康</div><div class="ins-d">结余率 68.5%，高于近 6 月均值 65.6%</div></div>
+</div>
+<div class="ins-m">查看全部提醒<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+</div><div class="card progcard">
+<div class="ch"><b>本月进度</b><em>11 月 · 30 天</em></div>
+<div class="prow"><span>记账笔数</span><b>17 笔</b></div>
+<div class="prow"><span>日均支出</span><b>¥591</b></div>
+<div class="prow"><span>预算已用</span><b>90.9%</b></div>
+<div class="prow"><span>距离月底</span><b>19 天</b></div>
+<div class="pbar"><i style="width:90.9%"></i></div>
+<div class="pnote"><span>剩余 ¥592.10</span><span>¥5,907.90 / ¥6,500.00</span></div>
+</div>
+</div>
+</div>
+<div class="accs">
+<div class="acc"><span class="acc-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="2.6" y="5.4" width="18.8" height="13.2" rx="2.4"/><path d="M2.6 10h18.8"/></svg></span><div><div class="acc-n">招商银行储蓄卡 · 储蓄卡</div><div class="acc-v">¥28,460.32</div></div></div>
+<div class="acc"><span class="acc-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3.4 8.2A2.4 2.4 0 0 1 5.8 5.8h12.4a2.4 2.4 0 0 1 2.4 2.4v9.4a2.4 2.4 0 0 1-2.4 2.4H5.8a2.4 2.4 0 0 1-2.4-2.4z"/><path d="M20.6 10.8h-4a1.9 1.9 0 0 0 0 3.8h4"/></svg></span><div><div class="acc-n">支付宝 · 电子钱包</div><div class="acc-v">¥3,218.90</div></div></div>
+<div class="acc"><span class="acc-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M20.4 11.6a7.4 7.4 0 0 1-10.9 6.6L4 19.4l1.4-4.2A7.4 7.4 0 1 1 20.4 11.6z"/></svg></span><div><div class="acc-n">微信零钱 · 电子钱包</div><div class="acc-v">¥842.15</div></div></div>
+<div class="acc"><span class="acc-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.8" y="6.6" width="18.4" height="10.8" rx="2"/><circle cx="12" cy="12" r="2.4"/></svg></span><div><div class="acc-n">现金 · 现金</div><div class="acc-v">¥560.00</div></div></div>
+<div class="acc"><span class="acc-i" style="color:#DC2626"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="2.6" y="5.4" width="18.8" height="13.2" rx="2.4"/><path d="M2.6 9.6h18.8M6.4 14.8h3.4"/></svg></span><div><div class="acc-n">招商银行信用卡 · 负债</div><div class="acc-v" style="color:#DC2626">−¥2,184.50</div></div></div>
+<div class="net"><span class="acc-i" style="color:#4F46E5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3.4l8.2 4.3L12 12 3.8 7.7z"/><path d="M3.8 12.4L12 16.7l8.2-4.3"/><path d="M3.8 16.6L12 20.9l8.2-4.3"/></svg></span><div style="margin-left:auto;text-align:right"><div class="acc-n" style="color:#6B6FA8">净资产</div><div class="acc-v">¥30,896.87</div></div></div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

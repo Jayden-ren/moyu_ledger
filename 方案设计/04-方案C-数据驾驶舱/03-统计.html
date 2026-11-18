@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>方案 C · 数据驾驶舱 · 03 统计</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden;margin:0}
+body{font-family:"Segoe UI Variable Text","Segoe UI","Microsoft YaHei UI","Microsoft YaHei",sans-serif;background:#F5F6FA;color:#171B33;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+:root{--ac:#4F46E5;--acd:#EEF0FF;--bd:#E7E9F2;--t1:#171B33;--t2:#5F6785;--t3:#98A0B8;--warn:#F59E0B;--dn:#DC2626;--ok:#16A34A}
+svg{display:block}
+.app{width:1440px;height:900px;display:flex;flex-direction:column;border:1px solid #D6D9E6}
+.tb{height:40px;flex:0 0 40px;background:#fff;border-bottom:1px solid var(--bd);display:flex;align-items:center;padding-left:12px;gap:9px}
+.tb-logo{width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,#4F46E5,#7C3AED);display:flex;align-items:center;justify-content:center;color:#fff}
+.tb-t{font-size:13px;font-weight:600}
+.tb-sep{width:1px;height:12px;background:#DDE0EC}
+.tb-s{font-size:12px;color:var(--t3)}
+.tb-r{margin-left:auto;display:flex;height:40px}
+.wb{width:46px;height:40px;display:flex;align-items:center;justify-content:center;color:#5B6280}
+.wb.x:hover{background:#E81123;color:#fff}
+.wrap{flex:1;display:flex;min-height:0}
+.rail{width:84px;flex:0 0 84px;background:#fff;border-right:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:2px}
+.ic{width:64px;height:52px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#8B93AA;position:relative}
+.ic span{font-size:10px;letter-spacing:.4px}
+.ic.on{background:var(--acd);color:var(--ac)}
+.ic.on:before{content:"";position:absolute;left:-10px;top:15px;width:3px;height:22px;border-radius:0 3px 3px 0;background:var(--ac)}
+.rail-sp{flex:1}
+.me{width:30px;height:30px;border-radius:50%;background:#E9EBF5;color:#5B6280;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:8px}
+.main{flex:1;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.hdr{height:26px;display:flex;align-items:center;gap:9px}
+.hdr-t{font-size:13px;font-weight:600}
+.hdr-s{font-size:12px;color:var(--t3)}
+.hdr-r{margin-left:auto;display:flex;align-items:center;gap:9px}
+.pill-w{height:24px;padding:0 10px;border-radius:999px;background:#FEF5E7;border:1px solid #F6D9AC;color:#B45309;font-size:11px;font-weight:600;display:flex;align-items:center;gap:5px}
+.btn-pri{height:28px;padding:0 12px;border-radius:9px;background:var(--ac);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px -2px rgba(79,70,229,.4)}
+.kpis{height:96px;display:flex;gap:12px}
+.kpi{flex:1;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:13px 16px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 1px 2px rgba(20,23,43,.04),0 10px 24px -14px rgba(20,23,43,.16)}
+.kpi-h{display:flex;align-items:center;justify-content:space-between;height:20px}
+.kpi-l{font-size:12px;color:var(--t2)}
+.kpi-b{font-size:24px;font-weight:600;letter-spacing:-.4px;line-height:1.05}
+.kpi-f{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--t3)}
+.chip-i{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.good{color:var(--ok);font-weight:600}
+.bad{color:var(--dn);font-weight:600}
+.ac{color:var(--ac);font-weight:600}.row2{height:570px;display:flex;gap:16px}
+.lcol{width:1000px;display:flex;flex-direction:column;gap:14px}
+.crow{height:278px;display:flex;gap:14px}
+.card{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:15px 18px;box-shadow:0 1px 2px rgba(20,23,43,.04),0 10px 26px -14px rgba(20,23,43,.16)}
+.ch{display:flex;align-items:center;justify-content:space-between;height:24px}
+.ch b{font-size:13px;font-weight:600;letter-spacing:.2px}
+.ch em{font-size:11px;color:var(--t3);font-style:normal}
+.ch em.wp{font-style:normal;font-size:10.5px;font-weight:600;color:#B45309;background:#FEF5E7;border:1px solid #F6D9AC;padding:2px 8px;border-radius:999px}
+.ringcard{width:380px;display:flex;flex-direction:column}
+.ringwrap{position:relative;height:142px;display:flex;align-items:center;justify-content:center;margin-top:4px}
+.ringc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.ringv{font-size:27px;font-weight:700;letter-spacing:-.8px;line-height:1}
+.ringk{font-size:10px;color:var(--t3);letter-spacing:1.2px}
+.rlg{margin-top:auto;display:flex;border-top:1px solid #F0F1F7;padding-top:11px}
+.rlg div{flex:1}
+.rlg div+div{border-left:1px solid #F0F1F7;padding-left:12px}
+.rlg span{font-size:10px;color:var(--t3)}
+.rlg b{display:block;font-size:13px;font-weight:600;margin-top:3px;letter-spacing:-.2px}
+.rlg b.w{color:#B45309}
+.trendcard{flex:1;display:flex;flex-direction:column}
+.stackcard{flex:1;display:flex;flex-direction:column}
+.sbar{height:46px;display:flex;margin-top:14px}
+.sbar i{display:flex;min-width:6px;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;font-style:normal;letter-spacing:.3px}
+.sbar i+i{box-shadow:inset 1px 0 0 #fff}.sbar i:first-child{border-radius:6px 0 0 6px}.sbar i:last-child{border-radius:0 6px 6px 0}.slg{flex:1;margin-top:16px;display:grid;grid-template-columns:repeat(5,1fr);gap:13px 16px;align-content:center}
+.slg div{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t2);white-space:nowrap}
+.slg b{font-size:11.5px;font-weight:600;color:#171B33;margin-left:auto}
+.slg u{text-decoration:none;font-size:10.5px;color:var(--t3);width:33px;text-align:right}
+.dot{width:7px;height:7px;border-radius:2px;flex:0 0 7px}
+.sfoot{margin-top:auto;height:32px;border-radius:10px;background:#F5F6FE;display:flex;align-items:center;gap:6px;padding:0 12px;font-size:11.5px;color:#4B5372}
+.sfoot b{color:var(--ac);font-weight:600}
+.rcol{width:300px;display:flex;flex-direction:column;gap:14px}
+.inscard{height:338px;display:flex;flex-direction:column}
+.ins{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed #EDEFF6}
+.ins:last-of-type{border-bottom:0}
+.ins-i{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:0 0 30px}
+.ins-t{font-size:12px;font-weight:600;margin-bottom:3px;letter-spacing:.2px}
+.ins-d{font-size:11px;color:var(--t2);line-height:1.45}
+.ins-m{margin-top:auto;height:30px;border-radius:9px;background:#F7F8FC;color:var(--t2);font-size:11.5px;display:flex;align-items:center;justify-content:center;gap:5px}
+.progcard{height:218px;display:flex;flex-direction:column}
+.prow{display:flex;align-items:baseline;justify-content:space-between;padding:5px 0;font-size:11.5px;color:var(--t2)}
+.prow b{font-size:13px;font-weight:600;color:#171B33}
+.pbar{height:6px;border-radius:3px;background:#EFF1F8;margin:6px 0 3px;overflow:hidden}
+.pbar i{display:block;height:6px;border-radius:3px;background:linear-gradient(90deg,#4F46E5,#8B5CF6 62%,#F59E0B)}
+.pnote{display:flex;justify-content:space-between;font-size:10.5px;color:var(--t3)}
+.dbars{margin-top:auto;display:flex;align-items:flex-end;gap:4px;height:58px;border-bottom:1px solid #F0F1F7;padding-bottom:1px}
+.dbars i{flex:1;border-radius:2px 2px 0 0;background:#DFE2EF;font-style:normal}
+.dcap{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:5px}
+.accs{height:86px;background:#fff;border:1px solid var(--bd);border-radius:16px;display:flex;align-items:center;padding:0 10px;box-shadow:0 1px 2px rgba(20,23,43,.04),0 10px 26px -14px rgba(20,23,43,.16)}
+.acc{flex:1;display:flex;align-items:center;gap:9px;padding:0 10px;height:54px}
+.acc+.acc{border-left:1px solid #F0F1F7}
+.acc-i{color:#8B93AA;flex:0 0 20px}
+.acc-n{font-size:11px;color:var(--t3);margin-bottom:3px}
+.acc-v{font-size:14px;font-weight:600;letter-spacing:-.2px}
+.net{flex:1.12;display:flex;align-items:center;gap:10px;padding:0 14px;height:62px;border-radius:12px;background:#F2F3FE;border:1px solid #E3E5FA;margin-left:6px}
+.net .acc-v{font-size:16px;color:var(--ac);font-weight:700}
+.sw{display:flex;gap:3px;background:#EDEFF6;border-radius:9px;padding:3px}
+.sw i{padding:0 11px;height:24px;border-radius:7px;font-style:normal;font-size:11.5px;color:#6B7391;display:flex;align-items:center;font-weight:500}
+.sw i.on{background:#fff;color:#4F46E5;font-weight:600;box-shadow:0 1px 3px rgba(20,23,43,.14)}
+.btn-gh{height:30px;padding:0 12px;border-radius:9px;background:#fff;border:1px solid #DDE0EE;color:#5F6785;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px}
+.dwrap{display:flex;align-items:center;gap:14px;height:100%}
+.donut{position:relative;width:190px;height:190px;flex:0 0 190px}
+.dc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.dv{font-size:15px;font-weight:700;letter-spacing:-.4px}
+.dk{font-size:10px;color:var(--t3);letter-spacing:.6px}
+.dlg{flex:1;display:flex;flex-direction:column;justify-content:center;gap:1px}
+.dlg div{display:flex;align-items:center;gap:7px;height:24px;font-size:11.5px;color:var(--t2)}
+.dlg b{font-size:11.5px;font-weight:600;color:#171B33;margin-left:auto}
+.dlg u{text-decoration:none;width:33px;text-align:right;font-size:10.5px;color:var(--t3)}
+.rk{display:flex;align-items:center;gap:10px;height:31px;font-size:12px}
+.rk .nm{width:38px;color:#3E4666}
+.rk .tr{flex:1;height:8px;border-radius:4px;background:#F1F3F9;overflow:hidden}
+.rk .tr i{display:block;height:8px;border-radius:4px}
+.rk .am{width:78px;text-align:right;font-weight:600;font-size:12px}
+.rk .pc{width:42px;text-align:right;font-size:11px;color:var(--t3)}
+.legendx{display:flex;align-items:center;gap:14px;font-size:11px;color:var(--t3)}
+.legendx span{display:flex;align-items:center;gap:5px}
+.legendx em{width:8px;height:8px;border-radius:2px;display:block}</style>
+</head>
+<body><div class="app">
+<div class="tb">
+<div class="tb-logo"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M4 19V10M10 19V4M16 19v-6"/><path d="M2 19h20"/></svg></div>
+<div class="tb-t">记账</div><div class="tb-sep"></div><div class="tb-s">林小满 · 个人账本 · 统计分析</div>
+<div class="tb-r">
+<div class="wb"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14"/></svg></div>
+<div class="wb"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="5.5" y="5.5" width="13" height="13" rx="1.6"/></svg></div>
+<div class="wb x"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></div>
+</div>
+</div>
+<div class="wrap">
+<div class="rail">
+<div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3.2" y="3.2" width="7.4" height="7.4" rx="2"/><rect x="13.4" y="3.2" width="7.4" height="7.4" rx="2"/><rect x="3.2" y="13.4" width="7.4" height="7.4" rx="2"/><rect x="13.4" y="13.4" width="7.4" height="7.4" rx="2"/></svg><span>概览</span></div>
+<div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 6.5h16M4 12h16M4 17.5h9"/></svg><span>流水</span></div>
+<div class="ic on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 20h18"/><path d="M7 20v-6M12 20V8M17 20v-9"/></svg><span>统计</span></div>
+<div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.4"/><circle cx="12" cy="12" r="3.6"/></svg><span>预算</span></div>
+<div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3.2 8.4A2.2 2.2 0 0 1 5.4 6.2h13.2a2.2 2.2 0 0 1 2.2 2.2v9.2a2.2 2.2 0 0 1-2.2 2.2H5.4a2.2 2.2 0 0 1-2.2-2.2z"/><path d="M20.8 10.6h-4.2a2.2 2.2 0 0 0 0 4.4h4.2"/></svg><span>账户</span></div>
+<div class="rail-sp"></div>
+<div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.4M12 18.8v2.4M4 8l2.1 1.2M17.9 14.8L20 16M4 16l2.1-1.2M17.9 9.2L20 8"/></svg><span>设置</span></div>
+<div class="me">林</div>
+</div>
+<div class="main"><div class="hdr" style="height:32px">
+<div class="hdr-t" style="font-size:15px">统计分析</div>
+<div class="hdr-s">2026 年 11 月 · 17 笔流水 · 10 个分类</div>
+<div class="hdr-r">
+<span style="font-size:11px;color:#98A0B8">月份</span>
+<div class="sw"><i>6月</i><i>7月</i><i>8月</i><i>9月</i><i>10月</i><i class="on">11月</i></div>
+<span style="font-size:11px;color:#98A0B8;margin-left:4px">维度</span>
+<div class="sw"><i class="on">分类</i><i>账户</i><i>标签</i></div>
+<div class="btn-gh"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6v11M7.6 10.4L12 14.8l4.4-4.4"/><path d="M4.4 19.4h15.2"/></svg>导出</div>
+</div>
+</div>
+<div style="height:354px;display:flex;gap:14px">
+<div class="card" style="width:440px;display:flex;flex-direction:column">
+<div class="ch"><b>分类占比</b><em>合计 ¥5,907.90</em></div>
+<div class="dwrap">
+<div class="donut">
+<svg width="190" height="190" viewBox="0 0 190 190">
+<circle cx="95" cy="95" r="72" fill="none" stroke="#F4F5FA" stroke-width="26"/>
+<circle cx="95" cy="95" r="72" fill="none" stroke="#6366F1" stroke-width="26" stroke-dasharray="246 452.39" stroke-dashoffset="0" transform="rotate(-90 95 95)"/>
+<circle cx="95" cy="95" r="72" fill="none" stroke="#F59E0B" stroke-width="26" stroke-dasharray="121 452.39" stroke-dashoffset="-245" transform="rotate(-90 95 95)"/>
+<circle cx="95" cy="95" r="72" fill="none" stroke="#EF4444" stroke-width="26" stroke-dasharray="24.6 452.39" stroke-dashoffset="-365" transform="rotate(-90 95 95)"/>
+<circle cx="95" cy="95" r="72" fill="none" stroke="#EC4899" stroke-width="26" stroke-dasharray="16.3 452.39" stroke-dashoffset="-388.62" transform="rotate(-90 95 95)"/>
+<circle cx="95" cy="95" r="72" fill="none" stroke="#8B5CF6" stroke-width="26" stroke-dasharray="16.2 452.39" stroke-dashoffset="-403.93" transform="rotate(-90 95 95)"/>
+<circle cx="95" cy="95" r="72" fill="none" stroke="#06B6D4" stroke-width="26" stroke-dasharray="13.9 452.39" stroke-dashoffset="-419.17" transform="rotate(-90 95 95)"/>
+<circle cx="95" cy="95" r="72" fill="none" stroke="#64748B" stroke-width="26" stroke-dasharray="8.6 452.39" stroke-dashoffset="-432.03" transform="rotate(-90 95 95)"/>
+<circle cx="95" cy="95" r="72" fill="none" stroke="#22C55E" stroke-width="26" stroke-dasharray="7.6 452.39" stroke-dashoffset="-439.61" transform="rotate(-90 95 95)"/>
+<circle cx="95" cy="95" r="72" fill="none" stroke="#14B8A6" stroke-width="26" stroke-dasharray="4.5 452.39" stroke-dashoffset="-446.23" transform="rotate(-90 95 95)"/>
+<circle cx="95" cy="95" r="72" fill="none" stroke="#3B82F6" stroke-width="26" stroke-dasharray="2.65 452.39" stroke-dashoffset="-449.71" transform="rotate(-90 95 95)"/>
+</svg>
+<div class="dc"><div class="dv">¥5,907.90</div><div class="dk">本月支出</div></div>
+</div>
+<div class="dlg">
+<div><span class="dot" style="background:#6366F1"></span>住房<b>¥3,200.00</b><u>54.2%</u></div>
+<div><span class="dot" style="background:#F59E0B"></span>购物<b>¥1,567.00</b><u>26.5%</u></div>
+<div><span class="dot" style="background:#EF4444"></span>餐饮<b>¥308.40</b><u>5.2%</u></div>
+<div><span class="dot" style="background:#EC4899"></span>人情<b>¥200.00</b><u>3.4%</u></div>
+<div><span class="dot" style="background:#8B5CF6"></span>教育<b>¥199.00</b><u>3.4%</u></div>
+<div><span class="dot" style="background:#06B6D4"></span>娱乐<b>¥168.00</b><u>2.8%</u></div>
+<div><span class="dot" style="background:#64748B"></span>通讯<b>¥99.00</b><u>1.7%</u></div>
+<div><span class="dot" style="background:#22C55E"></span>日用<b>¥86.40</b><u>1.5%</u></div>
+<div><span class="dot" style="background:#14B8A6"></span>医疗<b>¥45.50</b><u>0.8%</u></div>
+<div><span class="dot" style="background:#3B82F6"></span>交通<b>¥34.60</b><u>0.6%</u></div>
+</div>
+</div>
+</div><div class="card" style="flex:1;display:flex;flex-direction:column">
+<div class="ch"><b>月度支出趋势与预算基准</b>
+<span class="legendx"><span><em style="background:#4F46E5"></em>支出</span><span><em style="background:#F59E0B"></em>预算 ¥6,500.00</span><span>9 月超预算 ¥1,360.00</span></span></div>
+<svg width="822" height="288" viewBox="0 0 822 288" style="margin-top:2px">
+<defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4F46E5" stop-opacity=".26"/><stop offset="1" stop-color="#4F46E5" stop-opacity="0"/></linearGradient></defs>
+<g stroke="#EDEFF6" stroke-width="1"><path d="M56 44H812M56 100H812M56 156H812"/><path d="M56 212H812"/></g>
+<g font-size="10.5" fill="#98A0B8" text-anchor="end"><text x="46" y="47.5">8,000</text><text x="46" y="103.5">7,000</text><text x="46" y="159.5">6,000</text><text x="46" y="215.5">5,000</text></g>
+<path d="M56 128H812" stroke="#F59E0B" stroke-width="1.4" stroke-dasharray="5 5"/>
+<text x="812" y="121" font-size="10.5" fill="#B45309" text-anchor="end" font-weight="600">预算 ¥6,500.00</text>
+<path d="M56 159.92L207.2 149.28L358.4 185.12L509.6 51.84L660.8 125.76L812 161.16L812 240L56 240Z" fill="url(#tg)"/>
+<path d="M56 159.92L207.2 149.28L358.4 185.12L509.6 51.84L660.8 125.76L812 161.16" fill="none" stroke="#4F46E5" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+<g fill="#fff" stroke="#4F46E5" stroke-width="2"><circle cx="56" cy="159.92" r="3.6"/><circle cx="207.2" cy="149.28" r="3.6"/><circle cx="358.4" cy="185.12" r="3.6"/><circle cx="509.6" cy="51.84" r="3.6"/><circle cx="660.8" cy="125.76" r="3.6"/></g>
+<circle cx="812" cy="161.16" r="9" fill="#4F46E5" opacity=".13"/>
+<circle cx="812" cy="161.16" r="4.6" fill="#4F46E5" stroke="#fff" stroke-width="2"/>
+
+<circle cx="509.6" cy="51.84" r="9.5" fill="#DC2626" opacity=".14"/>
+<g font-size="11" fill="#5F6785" text-anchor="middle"><text x="56" y="148.92">5,930</text><text x="207.2" y="138.28">6,120</text><text x="358.4" y="174.12">5,480</text><text x="509.6" y="40.84">7,860</text><text x="660.8" y="114.76">6,540</text><text x="812" y="150.16" text-anchor="end" fill="#4F46E5" font-weight="600">5,907.90</text></g>
+<g font-size="11" fill="#98A0B8" text-anchor="middle"><text x="56" y="264">6月</text><text x="207.2" y="264">7月</text><text x="358.4" y="264">8月</text><text x="509.6" y="264">9月</text><text x="660.8" y="264">10月</text><text x="812" y="264">11月</text></g>
+</svg>
+</div>
+</div><div style="height:404px;display:flex;gap:14px">
+<div class="card" style="width:660px;display:flex;flex-direction:column">
+<div class="ch"><b>分类排行</b><em>按金额降序 · 住房占 54.2%</em></div>
+<div style="margin-top:6px">
+<div class="rk"><span class="nm">住房</span><span class="tr"><i style="width:100%;background:#6366F1"></i></span><span class="am">¥3,200.00</span><span class="pc">54.2%</span></div>
+<div class="rk"><span class="nm">购物</span><span class="tr"><i style="width:49.0%;background:#F59E0B"></i></span><span class="am">¥1,567.00</span><span class="pc">26.5%</span></div>
+<div class="rk"><span class="nm">餐饮</span><span class="tr"><i style="width:9.6%;background:#EF4444"></i></span><span class="am">¥308.40</span><span class="pc">5.2%</span></div>
+<div class="rk"><span class="nm">人情</span><span class="tr"><i style="width:6.3%;background:#EC4899"></i></span><span class="am">¥200.00</span><span class="pc">3.4%</span></div>
+<div class="rk"><span class="nm">教育</span><span class="tr"><i style="width:6.2%;background:#8B5CF6"></i></span><span class="am">¥199.00</span><span class="pc">3.4%</span></div>
+<div class="rk"><span class="nm">娱乐</span><span class="tr"><i style="width:5.3%;background:#06B6D4"></i></span><span class="am">¥168.00</span><span class="pc">2.8%</span></div>
+<div class="rk"><span class="nm">通讯</span><span class="tr"><i style="width:3.1%;background:#64748B"></i></span><span class="am">¥99.00</span><span class="pc">1.7%</span></div>
+<div class="rk"><span class="nm">日用</span><span class="tr"><i style="width:2.7%;background:#22C55E"></i></span><span class="am">¥86.40</span><span class="pc">1.5%</span></div>
+<div class="rk"><span class="nm">医疗</span><span class="tr"><i style="width:1.4%;background:#14B8A6"></i></span><span class="am">¥45.50</span><span class="pc">0.8%</span></div>
+<div class="rk"><span class="nm">交通</span><span class="tr"><i style="width:1.1%;background:#3B82F6"></i></span><span class="am">¥34.60</span><span class="pc">0.6%</span></div>
+</div>
+<div class="sfoot">住房 + 购物 合计 <b>80.7%</b>（¥4,767.00），其余 8 个分类共 <b>¥1,140.90</b></div>
+</div>
+<div class="card" style="flex:1;display:flex;flex-direction:column">
+<div class="ch"><b>收入 / 支出对比</b>
+<span class="legendx"><span><em style="background:#6366F1"></em>收入</span><span><em style="background:#F59E0B"></em>支出</span><span>结余 ¥12,850.10</span></span></div>
+<svg width="602" height="320" viewBox="0 0 602 320" style="margin-top:2px">
+<g stroke="#EDEFF6" stroke-width="1"><path d="M40 30H590M40 95H590M40 160H590M40 225H590"/><path d="M40 290H590" stroke="#D9DDEC"/></g>
+<g font-size="9.5" fill="#98A0B8" text-anchor="end"><text x="32" y="33">20k</text><text x="32" y="98">15k</text><text x="32" y="163">10k</text><text x="32" y="228">5k</text><text x="32" y="293">0</text></g>
+<g fill="#6366F1"><rect x="55.8" y="56" width="26" height="234" rx="3"/><rect x="147.5" y="56" width="26" height="234" rx="3"/><rect x="239.2" y="56" width="26" height="234" rx="3"/><rect x="330.8" y="40.4" width="26" height="249.6" rx="3"/><rect x="422.5" y="56" width="26" height="234" rx="3"/><rect x="514.2" y="46.15" width="26" height="243.85" rx="3"/></g>
+<g fill="#F59E0B"><rect x="89.8" y="212.91" width="26" height="77.09" rx="3"/><rect x="181.5" y="210.44" width="26" height="79.56" rx="3"/><rect x="273.2" y="218.76" width="26" height="71.24" rx="3"/><rect x="364.8" y="187.82" width="26" height="102.18" rx="3"/><rect x="456.5" y="204.98" width="26" height="85.02" rx="3"/><rect x="548.2" y="213.2" width="26" height="76.8" rx="3"/></g>
+<g font-size="9.5" fill="#5F6785" text-anchor="middle"><text x="527.2" y="38" fill="#4F46E5" font-weight="600">18,758.00</text><text x="596" y="207" text-anchor="end" fill="#B45309" font-weight="600">5,907.90</text></g>
+<g font-size="10.5" fill="#98A0B8" text-anchor="middle"><text x="85.8" y="308">6月</text><text x="177.5" y="308">7月</text><text x="269.2" y="308">8月</text><text x="360.8" y="308">9月</text><text x="452.5" y="308">10月</text><text x="544.2" y="308">11月</text></g>
+</svg>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

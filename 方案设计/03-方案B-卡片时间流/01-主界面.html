@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>方案B · 卡片时间流 — 主界面</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden;margin:0}
+body{font-family:"Segoe UI Variable Text","Segoe UI","Microsoft YaHei UI","Microsoft YaHei",sans-serif;font-size:15px;line-height:1.5;color:#1B2130;background:#F6F7F9;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+svg{display:block;flex:0 0 auto}
+.ic{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.app{width:1440px;height:900px;display:flex;flex-direction:column;border:1px solid #DDE1E8;overflow:hidden;background:#F6F7F9}
+/* 标题栏 */
+.tb{flex:0 0 40px;height:40px;background:#fff;border-bottom:1px solid #EBEDF1;display:flex;align-items:center}
+.wbtn{width:46px;height:39px;display:flex;align-items:center;justify-content:center;color:#5A6272}
+.tb-sp{flex:1}
+/* 顶部导航 64px */
+.hd{flex:0 0 64px;height:64px;background:#fff;border-bottom:1px solid #EBEDF1;display:flex;align-items:center;padding:0 20px 0 22px;gap:22px}
+.brand{display:flex;align-items:center;gap:9px}
+.logo{width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#14B8A6,#0EA5A0 60%,#0D9488);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(13,148,136,.28)}
+.brand b{font-size:15px;font-weight:600;letter-spacing:.2px}
+.tabs{display:flex;align-items:center;gap:2px}
+.tabs div{height:34px;padding:0 13px;display:flex;align-items:center;font-size:14px;color:#6B7280;border-radius:10px}
+.tabs div.on{background:#E7F6F4;color:#0D9488;font-weight:600}
+.hd-sp{flex:1}
+.iconbtn{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#6B7280;background:#F4F6F8}
+.avatar{width:32px;height:32px;border-radius:50%;background:#E7F6F4;color:#0D9488;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 0 0 1.5px #D9EFEC}
+.pill-btn{height:38px;border-radius:19px;background:linear-gradient(135deg,#FF8A73,#F76B58);color:#fff;display:flex;align-items:center;gap:7px;padding:0 18px;font-size:14px;font-weight:600;box-shadow:0 4px 12px rgba(247,107,88,.32)}
+/* 主体两列 */
+.body{flex:1;display:flex;min-height:0;padding:24px 36px 24px}
+.col-main{flex:0 0 780px;width:780px;display:flex;flex-direction:column}
+.gap20{flex:0 0 20px}
+.col-side{flex:1;min-width:0;margin-left:28px;display:flex;flex-direction:column;gap:18px}
+</style><style>
+/* ===== hero 区 ===== */
+.hero{flex:0 0 208px;height:208px;border-radius:24px;padding:24px 26px;display:flex;align-items:center;
+ background:linear-gradient(120deg,#0F8E86 0%,#12A79C 46%,#18B7A9 100%);
+ box-shadow:0 14px 34px rgba(13,148,136,.26),0 2px 6px rgba(13,148,136,.16);color:#fff;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-60px;top:-90px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.07)}
+.hero-l{flex:1;min-width:0;position:relative;z-index:2}
+.hero-k{font-size:13px;color:rgba(255,255,255,.78);letter-spacing:.5px}
+.hero-num{font-size:42px;font-weight:600;letter-spacing:-1.2px;line-height:1.18;margin-top:2px}
+.hero-num em{font-style:normal;font-size:24px;font-weight:500;margin-right:3px;opacity:.9}
+.chips{display:flex;gap:8px;margin-top:12px;align-items:center}
+.hchip{height:28px;padding:0 11px;border-radius:14px;background:rgba(255,255,255,.16);display:flex;align-items:center;gap:6px;font-size:12.5px;color:#fff}
+.hchip b{font-weight:600}
+.hchip.warn{background:rgba(255,158,120,.30)}
+.hero-sub{font-size:12.5px;color:rgba(255,255,255,.72);margin-top:9px}
+/* 预算环 */
+.ring-wrap{flex:0 0 190px;width:190px;display:flex;flex-direction:column;align-items:center;position:relative;z-index:2}
+.ring{position:relative;width:128px;height:128px}
+.ring svg{transform:rotate(-90deg)}
+.ring-c{position:absolute;left:0;top:0;width:128px;height:128px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-c .p{font-size:27px;font-weight:600;letter-spacing:-.6px}
+.ring-c .t{font-size:11.5px;color:rgba(255,255,255,.75);margin-top:-1px}
+.ring-foot{font-size:12px;color:rgba(255,255,255,.82);margin-top:9px;text-align:center}
+.ring-foot b{font-weight:600;color:#fff}
+/* ===== 分类快捷录入条 ===== */
+.quick{flex:0 0 108px;height:108px;background:#fff;border-radius:20px;display:flex;align-items:center;padding:0 14px;
+ box-shadow:0 8px 22px rgba(24,32,48,.055),0 1px 3px rgba(24,32,48,.04)}
+.q-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px}
+.q-circle{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600}
+.q-item .lb{font-size:12.5px;color:#5C6573}
+.q-item.more .q-circle{background:#F2F4F7;color:#98A1AE;font-size:22px;font-weight:400}
+</style><style>
+/* ===== 时间轴流水 ===== */
+.tl{flex:1;min-height:0;position:relative;overflow:hidden}
+.tl-hd{height:28px;display:flex;align-items:baseline;gap:9px}
+.tl-hd .d{font-size:15px;font-weight:600}
+.tl-hd .dt{font-size:12.5px;color:#98A1AE}
+.tl-hd .sm{margin-left:auto;font-size:12.5px;color:#98A1AE}
+.tl-row{display:flex;align-items:flex-start;margin-top:13px}
+.t-time{flex:0 0 46px;text-align:right;padding-top:22px;font-size:12px;color:#A6AEBB}
+.t-rail{flex:0 0 28px;position:relative;display:flex;justify-content:center}
+.t-rail::before{content:"";position:absolute;top:0;bottom:-13px;width:2px;background:#E7EAF0}
+.t-dot{position:relative;z-index:2;width:11px;height:11px;border-radius:50%;background:#fff;border:2.6px solid #14B8A6;margin-top:26px;box-shadow:0 0 0 3px #F6F7F9}
+.t-dot.coral{border-color:#F76B58}
+.t-dot.soft{border-color:#B9C2CE}
+.t-card{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border-radius:16px;
+ box-shadow:0 6px 18px rgba(24,32,48,.05),0 1px 3px rgba(24,32,48,.045);height:68px}
+.t-badge{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600}
+.t-main{flex:1;min-width:0}
+.t-sum{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-meta{font-size:12.5px;color:#98A1AE;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-amt{font-size:17px;font-weight:600;letter-spacing:-.2px}
+.t-amt.pos{color:#0F9D6E}
+.tl-fade{position:absolute;left:0;right:0;bottom:0;height:46px;background:linear-gradient(180deg,rgba(246,247,249,0) 0%,#F6F7F9 86%)}
+/* ===== 右栏卡片 ===== */
+.s-card{background:#fff;border-radius:20px;padding:18px 20px;box-shadow:0 8px 22px rgba(24,32,48,.055),0 1px 3px rgba(24,32,48,.04)}
+.s-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.s-hd h3{font-size:14px;font-weight:600}
+.s-hd a{font-size:12.5px;color:#0D9488}
+.acct-row{display:flex;align-items:center;gap:11px;height:41px}
+.acct-ic{width:34px;height:34px;border-radius:11px;background:#F2F6F8;color:#5C6573;display:flex;align-items:center;justify-content:center}
+.acct-n{flex:1;font-size:14px;color:#3A4250}
+.acct-v{font-size:14px;font-weight:600}
+.acct-v.neg{color:#F76B58}
+.net{display:flex;align-items:baseline;justify-content:space-between;margin-top:8px;padding-top:12px;border-top:1px solid #F1F3F6}
+.net .k{font-size:12.5px;color:#98A1AE}
+.net .v{font-size:21px;font-weight:600;letter-spacing:-.4px}
+.cat-row{display:flex;align-items:center;gap:10px;height:39px}
+.cat-name{width:42px;font-size:13px;color:#5C6573}
+.cat-track{flex:1;height:8px;border-radius:4px;background:#F2F4F7;overflow:hidden}
+.cat-track i{display:block;height:8px;border-radius:4px}
+.cat-v{width:76px;text-align:right;font-size:13px;font-weight:600}
+.mini-bars{display:flex;align-items:flex-end;gap:9px;height:108px;margin-top:2px}
+.mb{flex:1;display:flex;align-items:flex-end;justify-content:center;height:100%}
+.mb i{flex:0 0 auto;width:100%;max-width:26px;border-radius:7px 7px 3px 3px;background:#D8EFEB}
+.mb.cur i{background:linear-gradient(180deg,#19B8AA,#0D9488)}
+.mini-labels{display:flex;gap:9px;margin-top:8px}
+.mini-labels span{flex:1;text-align:center;font-size:11px;color:#98A1AE}
+.mini-labels span.cur{color:#0D9488;font-weight:600}
+</style>
+</head>
+<body><div class="app">
+  <div class="tb">
+    <div style="padding-left:12px;display:flex;align-items:center;gap:8px;flex:1">
+      <div style="width:16px;height:16px;border-radius:5px;background:linear-gradient(135deg,#14B8A6,#0D9488);display:flex;align-items:center;justify-content:center;color:#fff">
+        <svg width="10" height="10" viewBox="0 0 24 24" class="ic"><path d="M5 3.5h9.5L19 8v12.5H5z"/><path d="M8.5 9h7M8.5 13h4.5"/></svg>
+      </div>
+      <span style="font-size:12.5px;font-weight:600;color:#4A5160">小满记账</span>
+      <span style="font-size:12px;color:#A6AEBB;padding-left:9px;margin-left:1px;border-left:1px solid #E9ECF1">个人账本</span>
+    </div>
+    <div class="wbtn"><svg width="11" height="11" viewBox="0 0 24 24" class="ic"><path d="M5 12h14"/></svg></div>
+    <div class="wbtn"><svg width="11" height="11" viewBox="0 0 24 24" class="ic"><rect x="5" y="5" width="14" height="14" rx="1"/></svg></div>
+    <div class="wbtn"><svg width="11" height="11" viewBox="0 0 24 24" class="ic"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+  </div>
+  <div class="hd">
+    <div class="brand">
+      <div class="logo"><svg width="16" height="16" viewBox="0 0 24 24" class="ic" style="stroke-width:1.7"><path d="M5 3.5h9.5L19 8v12.5H5z"/><path d="M8.5 9h7M8.5 13h4.5"/></svg></div>
+      <b>小满记账</b>
+    </div>
+    <div class="tabs">
+      <div class="on">概览</div>
+      <div>流水</div>
+      <div>统计</div>
+      <div>预算</div>
+      <div>账户</div>
+    </div>
+    <div class="hd-sp"></div>
+    <div class="iconbtn"><svg width="17" height="17" viewBox="0 0 24 24" class="ic"><circle cx="10.5" cy="10.5" r="6.2"/><path d="M15.2 15.2l4.3 4.3"/></svg></div>
+    <div class="avatar">林</div>
+    <div class="pill-btn">
+      <svg width="15" height="15" viewBox="0 0 24 24" class="ic"><path d="M12 5v14M5 12h14"/></svg>记一笔
+    </div>
+  </div>
+  <div class="body">
+    <div class="col-main">
+      <div class="hero">
+        <div class="hero-l">
+          <div class="hero-k">2026 年 11 月 · 本月支出</div>
+          <div class="hero-num"><em>¥</em>5,907.90</div>
+          <div class="chips">
+            <div class="hchip warn">
+              <svg width="12" height="12" viewBox="0 0 24 24" class="ic"><path d="M12 4.5L21 20H3z"/><path d="M12 10v4.2M12 17.2v.01"/></svg>预算已用 90.9%
+            </div>
+            <div class="hchip">收入 <b>¥18,758.00</b></div>
+            <div class="hchip">结余 <b>¥12,850.10</b></div>
+          </div>
+          <div class="hero-sub">17 笔记账 · 日均 ¥591 · 较 10 月减少 ¥632.10</div>
+        </div>
+        <div class="ring-wrap">
+          <div class="ring">
+            <svg width="128" height="128" viewBox="0 0 140 140">
+              <circle cx="70" cy="70" r="58" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="11"/>
+              <circle cx="70" cy="70" r="58" fill="none" stroke="#FF9E86" stroke-width="11" stroke-linecap="round" stroke-dasharray="331.3 33.1"/>
+            </svg>
+            <div class="ring-c"><div class="p">90.9%</div><div class="t">预算已用</div></div>
+          </div>
+          <div class="ring-foot">剩余 <b>¥592.10</b> / ¥6,500.00</div>
+        </div>
+      </div>
+      <div class="gap20"></div>      <div class="quick">
+        <div class="q-item"><div class="q-circle" style="background:#FEF1EF;color:#EF4444">餐</div><span class="lb">餐饮</span></div>
+        <div class="q-item"><div class="q-circle" style="background:#EFF5FE;color:#3B82F6">交</div><span class="lb">交通</span></div>
+        <div class="q-item"><div class="q-circle" style="background:#FEF6E8;color:#F59E0B">购</div><span class="lb">购物</span></div>
+        <div class="q-item"><div class="q-circle" style="background:#EFF0FE;color:#6366F1">住</div><span class="lb">住房</span></div>
+        <div class="q-item"><div class="q-circle" style="background:#E9F7FB;color:#06B6D4">娱</div><span class="lb">娱乐</span></div>
+        <div class="q-item"><div class="q-circle" style="background:#EAF8EF;color:#22C55E">日</div><span class="lb">日用</span></div>
+        <div class="q-item"><div class="q-circle" style="background:#E8F7F6;color:#14B8A6">医</div><span class="lb">医疗</span></div>
+        <div class="q-item more"><div class="q-circle">
+          <svg width="18" height="18" viewBox="0 0 24 24" class="ic"><path d="M6 12h12M12 6v12"/></svg></div><span class="lb">更多</span></div>
+      </div>
+      <div class="gap20"></div>
+      <div class="tl">
+        <div class="tl-hd"><span class="d">今天</span><span class="dt">11 月 11 日 周三</span><span class="sm">支出 ¥297.00</span></div>
+        <div class="tl-row">
+          <div class="t-time">12:24</div>
+          <div class="t-rail"><div class="t-dot coral"></div></div>
+          <div class="t-card">
+            <div class="t-badge" style="background:#FEF1EF;color:#EF4444">餐</div>
+            <div class="t-main">
+              <div class="t-sum">午餐 · 沙县小吃</div>
+              <div class="t-meta">支付宝 · 工作日午餐</div>
+            </div>
+            <div class="t-amt">−¥23.00</div>
+          </div>
+        </div>
+        <div class="tl-row">
+          <div class="t-time">09:12</div>
+          <div class="t-rail"><div class="t-dot"></div></div>
+          <div class="t-card">
+            <div class="t-badge" style="background:#EFF5FE;color:#3B82F6">交</div>
+            <div class="t-main">
+              <div class="t-sum">地铁 2 号线</div>
+              <div class="t-meta">微信零钱 · 通勤</div>
+            </div>
+            <div class="t-amt">−¥6.00</div>
+          </div>
+        </div>
+        <div class="tl-row">
+          <div class="t-time">08:40</div>
+          <div class="t-rail"><div class="t-dot"></div></div>
+          <div class="t-card">
+            <div class="t-badge" style="background:#FEF6E8;color:#F59E0B">购</div>
+            <div class="t-main">
+              <div class="t-sum">键帽 · 轴体</div>
+              <div class="t-meta">招商银行信用卡</div>
+            </div>
+            <div class="t-amt">−¥268.00</div>
+          </div>
+        </div>
+        <div class="tl-hd" style="margin-top:8px"><span class="d">11-10</span><span class="dt">周二</span><span class="sm">支出 ¥1,337.00</span></div>
+        <div class="tl-row">
+          <div class="t-time">15:05</div>
+          <div class="t-rail"><div class="t-dot soft"></div></div>
+          <div class="t-card">
+            <div class="t-badge" style="background:#FEF1EF;color:#EF4444">餐</div>
+            <div class="t-main">
+              <div class="t-sum">星巴克 香草拿铁</div>
+              <div class="t-meta">支付宝 · 下午茶</div>
+            </div>
+            <div class="t-amt">−¥38.00</div>
+          </div>
+        </div>
+      </div>
+    </div>    <div class="col-side">
+      <div class="s-card">
+        <div class="s-hd"><h3>账户</h3><a>管理账户</a></div>
+        <div class="acct-row"><div class="acct-ic"><svg width="16" height="16" viewBox="0 0 24 24" class="ic"><rect x="2.5" y="5" width="19" height="14" rx="2.4"/><path d="M2.5 10h19"/></svg></div><div class="acct-n">招商银行储蓄卡</div><div class="acct-v">¥28,460.32</div></div>
+        <div class="acct-row"><div class="acct-ic"><svg width="16" height="16" viewBox="0 0 24 24" class="ic"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10.5 18.5h3"/></svg></div><div class="acct-n">支付宝</div><div class="acct-v">¥3,218.90</div></div>
+        <div class="acct-row"><div class="acct-ic"><svg width="16" height="16" viewBox="0 0 24 24" class="ic"><path d="M20.5 12.4c0 3.5-3.6 6.4-8 6.4-1 0-1.9-.1-2.8-.4L5.5 20l1.1-3.1C4.9 15.7 3.5 14.2 3.5 12.4c0-3.5 3.8-6.4 8.5-6.4s8.5 2.9 8.5 6.4z"/></svg></div><div class="acct-n">微信零钱</div><div class="acct-v">¥842.15</div></div>
+        <div class="acct-row"><div class="acct-ic"><svg width="16" height="16" viewBox="0 0 24 24" class="ic"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/></svg></div><div class="acct-n">现金</div><div class="acct-v">¥560.00</div></div>
+        <div class="acct-row"><div class="acct-ic"><svg width="16" height="16" viewBox="0 0 24 24" class="ic"><rect x="2.5" y="5" width="19" height="14" rx="2.4"/><path d="M2.5 9.5h19M6 14.5h4.5"/></svg></div><div class="acct-n">招商银行信用卡</div><div class="acct-v neg">−¥2,184.50</div></div>
+        <div class="net"><span class="k">净资产</span><span class="v">¥30,896.87</span></div>
+      </div>
+      <div class="s-card" style="flex:0 0 180px">
+        <div class="s-hd"><h3>本月分类</h3><a>查看全部 10 类</a></div>
+        <div class="cat-row"><span class="cat-name">住房</span><span class="cat-track"><i style="width:100%;background:#6366F1"></i></span><span class="cat-v">¥3,200.00</span></div>
+        <div class="cat-row"><span class="cat-name">购物</span><span class="cat-track"><i style="width:48.9%;background:#F59E0B"></i></span><span class="cat-v">¥1,567.00</span></div>
+        <div class="cat-row"><span class="cat-name">餐饮</span><span class="cat-track"><i style="width:9.6%;background:#EF4444"></i></span><span class="cat-v">¥308.40</span></div>
+      </div>
+      <div class="s-card" style="flex:1;min-height:0;display:flex;flex-direction:column">
+        <div class="s-hd"><h3>近 6 个月支出</h3><a>统计</a></div>
+        <div class="mini-bars">
+          <div class="mb"><i style="height:75.4%"></i></div>
+          <div class="mb"><i style="height:77.9%"></i></div>
+          <div class="mb"><i style="height:69.7%"></i></div>
+          <div class="mb"><i style="height:100%"></i></div>
+          <div class="mb"><i style="height:83.2%"></i></div>
+          <div class="mb cur"><i style="height:75.2%"></i></div>
+        </div>
+        <div class="mini-labels"><span>6 月</span><span>7 月</span><span>8 月</span><span>9 月</span><span>10 月</span><span class="cur">11 月</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
